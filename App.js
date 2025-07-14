@@ -241,8 +241,8 @@ export default function App() {
       <StatusBar style={colors.STATUS_BAR} />
       
       {/* Header */}
-        <BlurView
-          intensity={80}
+        <View
+          intensity={0}
           tint={colors.STATUS_BAR === 'dark' ? 'light' : 'dark'}
           style={[styles.header]}
         >
@@ -263,7 +263,7 @@ export default function App() {
           <Ionicons name="settings" size={24} color={colors.ACCENT} />
             </TouchableOpacity>
           </View>
-        </BlurView>
+        </View>
 
         {/* Chat Interface */}
       <CustomChat

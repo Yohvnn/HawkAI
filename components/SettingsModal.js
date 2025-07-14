@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   TextInput,
   Alert,
   Linking,
+  BackHandler,
 } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -35,6 +36,21 @@ const SettingsModal = ({
   const [tempAssistantName, setTempAssistantName] = useState(assistantName || t('ASSISTANT_NAME_DEFAULT'));
   const accentOptions = getAccentColorOptions(t);
   const languageOptions = getAvailableLanguages();
+
+  // Handle Android back button
+  useEffect(() => {
+    const backAction = () => {
+      if (visible) {
+        onClose();
+        return true; // Prevent default behavior
+      }
+      return false; // Allow default behavior
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove();
+  }, [visible, onClose]);
 
   const handleAssistantNameSave = () => {
     const trimmedName = tempAssistantName.trim();
@@ -169,6 +185,7 @@ const SettingsModal = ({
       visible={visible}
       animationType="slide"
       presentationStyle="pageSheet"
+      onRequestClose={onClose}
     >
       <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
         {/* Header */}
