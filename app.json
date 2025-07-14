@@ -1,29 +1,48 @@
 {
   "expo": {
-    "name": "Oscar",
-    "slug": "Oscar",
+    "name": "HawkAI",
+    "slug": "personal-assistant-gemini",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Hawk.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/Hawk.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yohannchanchew.hawkai"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/Hawk.png",
+        "backgroundColor": "#007AFF"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.yohannchanchew.hawkai"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "description": "HawkAI - A smart personal assistant powered by Google Gemini AI with an intuitive chat interface.",
+    "keywords": [
+      "hawkai",
+      "hawk",
+      "ai",
+      "assistant",
+      "gemini",
+      "chat",
+      "personal"
+    ],
+    "githubUrl": "https://github.com/yohannchanchew/hawkai-assistant",
+    "extra": {
+      "eas": {
+        "projectId": "50d5c82f-fea8-4cc9-a4c5-b20dd2ab61b1"
+      }
     }
   }
 }
