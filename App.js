@@ -5,7 +5,8 @@ import {
   Text, 
   SafeAreaView, 
   Alert, 
-  TouchableOpacity
+  TouchableOpacity,
+  useColorScheme
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomChat from './components/CustomChat';
@@ -28,8 +29,16 @@ export default function App() {
   const [userApiKey, setUserApiKey] = useState('');
   const [assistantName, setAssistantName] = useState('Assistant');
   
+  // Get system color scheme
+  const systemColorScheme = useColorScheme();
+  
+  // Determine actual theme to use (if SYSTEM is selected, use system preference)
+  const actualTheme = currentTheme === 'SYSTEM' 
+    ? (systemColorScheme === 'dark' ? 'DARK' : 'LIGHT')
+    : currentTheme;
+  
   // Get current theme colors
-  const colors = getThemeColors(currentTheme, currentAccent);
+  const colors = getThemeColors(actualTheme, currentAccent);
 
   useEffect(() => {
     // Load saved preferences

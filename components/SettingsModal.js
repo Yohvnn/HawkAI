@@ -145,7 +145,7 @@ const SettingsModal = ({
           {/* API Key Section */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              🔑 API Key
+              API Key
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
               Manage your Gemini AI API key for personalized access
@@ -194,7 +194,7 @@ const SettingsModal = ({
           {/* Assistant Name Section */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              🤖 Assistant Name
+              Assistant Name
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
               Give your AI assistant a personal name
@@ -256,12 +256,13 @@ const SettingsModal = ({
           {/* Theme Selection */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              🌙 Theme
+              Theme
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
               Choose your preferred theme
             </Text>
             <View style={styles.optionsContainer}>
+              {renderThemeOption('SYSTEM', 'Follow System', 'phone-portrait')}
               {renderThemeOption('LIGHT', 'Light Mode', 'sunny')}
               {renderThemeOption('DARK', 'Dark Mode', 'moon')}
             </View>
@@ -270,7 +271,7 @@ const SettingsModal = ({
           {/* Accent Color Selection */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              🎨 Accent Color
+              Accent Color
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
               Customize your app's accent color
@@ -283,7 +284,7 @@ const SettingsModal = ({
           {/* Preview */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              👀 Preview
+              Preview
             </Text>
             <View style={[styles.previewContainer, { backgroundColor: colors.SECONDARY_BACKGROUND, borderColor: colors.BORDER }]}>
               <View style={[styles.previewBubble, { backgroundColor: colors.BUBBLE_USER }]}>
@@ -302,7 +303,7 @@ const SettingsModal = ({
           {/* Credits */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              ℹ️ Credits
+              Credits
             </Text>
             <View style={[styles.creditsContainer, { backgroundColor: colors.SECONDARY_BACKGROUND, borderColor: colors.BORDER }]}>
               <Text style={[styles.creditsText, { color: colors.TEXT_SECONDARY }]}>
@@ -317,7 +318,7 @@ const SettingsModal = ({
               <Text style={[styles.creditsText, { color: colors.TEXT_SECONDARY }]}>
                 {'\n'}Powered by Google Gemini AI
                 {'\n'}Built with React Native & Expo
-                {'\n\n'}🦅 BloodyHawk Gaming
+                {'\n'}🦅BloodyHawk Studio
               </Text>
             </View>
           </View>

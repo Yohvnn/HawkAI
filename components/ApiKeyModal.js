@@ -50,7 +50,7 @@ const ApiKeyModal = ({
   const renderInstructions = () => (
     <View style={[styles.instructionsContainer, { backgroundColor: colors.SECONDARY_BACKGROUND }]}>
       <Text style={[styles.instructionsTitle, { color: colors.TEXT_PRIMARY }]}>
-        🔑 How to Get Your Gemini API Key
+        How to Get Your Gemini API Key
       </Text>
 
       <View style={styles.step}>
@@ -136,7 +136,7 @@ const ApiKeyModal = ({
           {/* API Key Input Section */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              🔐 Your Gemini API Key
+              Your Gemini API Key
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
               Enter your personal Gemini API key to start chatting with AI
@@ -193,7 +193,7 @@ const ApiKeyModal = ({
           >
             <View style={styles.toggleContent}>
               <Text style={[styles.toggleText, { color: colors.TEXT_PRIMARY }]}>
-                📚 How to get your API key
+                How to get your API key
               </Text>
               <Ionicons
                 name={showInstructions ? "chevron-up" : "chevron-down"}
@@ -209,7 +209,7 @@ const ApiKeyModal = ({
           {/* Benefits Section */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              ✨ Why Your Own API Key?
+              Why Your Own API Key?
             </Text>
 
             <View style={styles.benefit}>
