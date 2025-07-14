@@ -21,9 +21,10 @@ This is a React Native Expo personal assistant app project with the following sp
 
 ## Dependencies
 - @google/generative-ai - For Gemini API integration
-- react-native-gifted-chat - For chat UI components
-- expo-linear-gradient - For modern UI gradients
+- expo-blur - For glassmorphism blur effects
+- expo-clipboard - For copy message functionality
 - @expo/vector-icons - For iconography
+- @react-native-async-storage/async-storage - For local data persistence
 
 ## Development Notes
 - Test on both Android and iOS simulators

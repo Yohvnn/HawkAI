@@ -4,8 +4,18 @@
 
 ### 1. Get Your Gemini API Key
 1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Sign in with your Google account
-3. Click "Create API Key"
+2. Sign in with you- Restart both the development server and Expo Go app
+
+**Native module linking errors**
+- If you see errors about native modules not being linked
+- This typically occurs when using libraries not compatible with Expo Go
+- Solution: We use only Expo-compatible libraries in this project
+- Run: `npx expo start --clear` to clear cache and restart
+
+### Getting Help
+- Check [Expo Documentation](https://docs.expo.dev/)
+- Visit [Google AI Documentation](https://ai.google.dev/)
+- Review [React Native Documentation](https://reactnative.dev/docs/getting-started)3. Click "Create API Key"
 4. Copy your new API key
 
 ### 2. Configure the App

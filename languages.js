@@ -89,7 +89,7 @@ Your conversations will be private and secure!`,
     CREDITS_DEVELOPED_BY: 'Developed by',
     CREDITS_POWERED_BY: 'Powered by Google Gemini AI',
     CREDITS_BUILT_WITH: 'Built with React Native & Expo',
-    CREDITS_COMPANY: '🦅BloodyHawk Studio',
+    CREDITS_COMPANY: 'BloodyHawk Studio',
     
     // API Key Modal
     API_KEY_MODAL_TITLE: 'API Key Settings',
@@ -205,7 +205,7 @@ Vos conversations seront privées et sécurisées !`,
     CREDITS_DEVELOPED_BY: 'Développé par',
     CREDITS_POWERED_BY: 'Alimenté par Google Gemini AI',
     CREDITS_BUILT_WITH: 'Construit avec React Native & Expo',
-    CREDITS_COMPANY: 'BloodyHawk Gaming',
+    CREDITS_COMPANY: 'BloodyHawk Studio',
     
     // API Key Modal
     API_KEY_MODAL_TITLE: 'Paramètres de la clé API',

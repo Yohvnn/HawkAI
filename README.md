@@ -15,8 +15,9 @@ A cost-effective personal assistant mobile app built with React Native and Expo,
 
 ### Prerequisites
 - Node.js 18 or later
-- Expo CLI (`npm install -g @expo/eas-cli`)
+- EAS CLI (`npm install -g @expo/eas-cli`)
 - Gemini API key ([Get one here](https://makersuite.google.com/app/apikey))
+- Expo account (for EAS Build)
 
 ### Installation
 1. **Clone and install**
@@ -39,6 +40,11 @@ A cost-effective personal assistant mobile app built with React Native and Expo,
    npm run android  # Android
    npm run ios      # iOS (macOS required)
    npm run web      # Web browser
+   ```
+
+5. **Build APK for distribution (optional)**
+   ```bash
+   eas build --platform android --profile preview
    ```
 
 ## 📖 Detailed Setup
@@ -100,22 +106,38 @@ npm start          # Start Expo development server
 npm run android    # Run on Android emulator/device
 npm run ios        # Run on iOS simulator/device
 npm run web        # Run in web browser
-npm run eject      # Eject from Expo (not recommended)
+
+# EAS Build commands
+eas build --platform android --profile preview  # Build Android APK
+eas build --platform ios                        # Build iOS app
+eas submit --platform android                   # Submit to Google Play
+eas submit --platform ios                       # Submit to App Store
 ```
 
 ## 📦 Building for Production
 
 ### Using EAS Build (Recommended)
 ```bash
+# Install EAS CLI if not already installed
 npm install -g @expo/eas-cli
+
+# Build Android APK (preview build)
+eas build --platform android --profile preview
+
+# Build for iOS (requires Apple Developer account)
+eas build --platform ios
+
+# Build for both platforms
 eas build --platform all
 ```
 
-### Legacy Expo Build
-```bash
-expo build:android  # Build APK
-expo build:ios      # Build IPA
-```
+### EAS Build Profiles
+The project uses EAS Build with preview profile for Android APK generation:
+- **Preview**: Generates installable APK for testing (internal distribution)
+- **Production**: For app store distribution with auto-increment versioning
+- **Development**: For development builds with debugging enabled
+
+Configuration is managed in `eas.json`. The preview build is perfect for generating APK files for testing and distribution outside of app stores.
 
 ## 🧪 Testing
 
@@ -138,16 +160,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 - 📚 [Expo Documentation](https://docs.expo.dev/)
-- 🤖 [Gemini AI Documentation](https://ai.google.dev/docs)
-- 💬 [React Native Gifted Chat](https://github.com/FaridSafi/react-native-gifted-chat)
+- 🤖 [Gemini AI Documentation](https://ai.google.dev/)
+- ⚛️ [React Native Documentation](https://reactnative.dev/)
 
 ## 🔮 Roadmap
 
 - [ ] Voice input/output
 - [ ] Message history persistence
-- [ ] Dark mode support
-- [ ] Multiple AI model options
+- [ ] Multiple AI model options  
 - [ ] Conversation export
+- [ ] Enhanced glassmorphism effects
+- [ ] Custom accent color picker
+- [ ] Message search functionality
 - [ ] Push notifications
 
 ---
