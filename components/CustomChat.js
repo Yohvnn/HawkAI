@@ -19,7 +19,8 @@ const CustomChat = ({
   user,
   isLoading = false,
   theme,
-  accentColor 
+  accentColor,
+  t
 }) => {
   const [inputText, setInputText] = useState('');
   const scrollViewRef = useRef();
@@ -178,7 +179,7 @@ const CustomChat = ({
                 fontSize: 14,
                 fontStyle: 'italic'
               }}>
-                Thinking...
+                {t ? t('ASSISTANT_TYPING') : 'Thinking...'}
               </Text>
             </View>
           </View>
@@ -210,7 +211,7 @@ const CustomChat = ({
               maxHeight: 100,
               paddingVertical: 8,
             }}
-            placeholder="Type a message..."
+            placeholder={t ? t('CHAT_PLACEHOLDER') : 'Type a message...'}
             placeholderTextColor={theme.TEXT_SECONDARY}
             value={inputText}
             onChangeText={setInputText}

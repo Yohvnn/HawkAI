@@ -14,35 +14,40 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 import { getAccentColorOptions } from '../config';
+import { getAvailableLanguages } from '../languages';
 
 const SettingsModal = ({ 
   visible, 
   onClose, 
   currentTheme, 
   currentAccent, 
+  currentLanguage,
   onThemeChange, 
   onAccentChange,
+  onLanguageChange,
   onApiKeyPress,
   onAssistantNameChange,
   userApiKey,
   assistantName,
-  colors 
+  colors,
+  t
 }) => {
-  const [tempAssistantName, setTempAssistantName] = useState(assistantName || 'Assistant');
-  const accentOptions = getAccentColorOptions();
+  const [tempAssistantName, setTempAssistantName] = useState(assistantName || t('ASSISTANT_NAME_DEFAULT'));
+  const accentOptions = getAccentColorOptions(t);
+  const languageOptions = getAvailableLanguages();
 
   const handleAssistantNameSave = () => {
     const trimmedName = tempAssistantName.trim();
     if (!trimmedName) {
-      Alert.alert('Invalid Name', 'Please enter a valid name for your assistant.');
+      Alert.alert(t('ERROR'), t('ASSISTANT_NAME_INVALID'));
       return;
     }
     if (trimmedName.length > 20) {
-      Alert.alert('Name Too Long', 'Please choose a name with 20 characters or less.');
+      Alert.alert(t('ERROR'), t('ASSISTANT_NAME_TOO_LONG'));
       return;
     }
     onAssistantNameChange(trimmedName);
-    Alert.alert('Success!', `Your assistant is now called "${trimmedName}"`);
+    Alert.alert(t('SUCCESS'), `${t('ASSISTANT_NAME_SUCCESS')} "${trimmedName}"`);
   };
 
   const handleOpenCV = async () => {
@@ -97,6 +102,39 @@ const SettingsModal = ({
     </TouchableOpacity>
   );
 
+  const renderLanguageOption = (language) => (
+    <TouchableOpacity
+      key={language.code}
+      style={[
+        styles.optionButton,
+        { 
+          backgroundColor: colors.SECONDARY_BACKGROUND,
+          borderColor: currentLanguage === language.code ? colors.ACCENT : colors.BORDER,
+          borderWidth: currentLanguage === language.code ? 2 : 1,
+        }
+      ]}
+      onPress={() => onLanguageChange(language.code)}
+    >
+      <Ionicons 
+        name="language" 
+        size={24} 
+        color={currentLanguage === language.code ? colors.ACCENT : colors.TEXT_SECONDARY} 
+      />
+      <Text style={[
+        styles.optionText,
+        { 
+          color: currentLanguage === language.code ? colors.ACCENT : colors.TEXT_PRIMARY,
+          fontWeight: currentLanguage === language.code ? 'bold' : 'normal',
+        }
+      ]}>
+        {language.name}
+      </Text>
+      {currentLanguage === language.code && (
+        <Ionicons name="checkmark-circle" size={20} color={colors.ACCENT} />
+      )}
+    </TouchableOpacity>
+  );
+
   const renderAccentOption = (option) => (
     <TouchableOpacity
       key={option.name}
@@ -135,7 +173,7 @@ const SettingsModal = ({
       <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
         {/* Header */}
         <View style={[styles.header, { backgroundColor: colors.BACKGROUND, borderBottomColor: colors.BORDER }]}>
-          <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>Settings</Text>
+          <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{t('SETTINGS_TITLE')}</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close" size={24} color={colors.TEXT_PRIMARY} />
           </TouchableOpacity>
@@ -145,10 +183,10 @@ const SettingsModal = ({
           {/* API Key Section */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              API Key
+              {t('API_KEY_SECTION')}
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
-              Manage your Gemini AI API key for personalized access
+              {t('API_KEY_DESCRIPTION')}
             </Text>
             <TouchableOpacity
               style={[
@@ -171,15 +209,15 @@ const SettingsModal = ({
                   styles.apiKeyTitle,
                   { color: colors.TEXT_PRIMARY }
                 ]}>
-                  {userApiKey ? 'Update API Key' : 'Setup API Key'}
+                  {userApiKey ? t('API_KEY_UPDATE') : t('API_KEY_SETUP')}
                 </Text>
                 <Text style={[
                   styles.apiKeyStatus,
                   { color: userApiKey ? colors.ACCENT : '#FF9500' }
                 ]}>
                   {userApiKey ? 
-                    `Configured (${userApiKey.length} chars)` : 
-                    'Required for AI chat'
+                    `${t('API_KEY_CONFIGURED')} (${userApiKey.length} chars)` : 
+                    t('API_KEY_REQUIRED')
                   }
                 </Text>
               </View>
@@ -194,10 +232,10 @@ const SettingsModal = ({
           {/* Assistant Name Section */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              Assistant Name
+              {t('ASSISTANT_NAME_SECTION')}
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
-              Give your AI assistant a personal name
+              {t('ASSISTANT_NAME_DESCRIPTION')}
             </Text>
             <View style={styles.nameInputContainer}>
               <TextInput
@@ -209,7 +247,7 @@ const SettingsModal = ({
                     color: colors.TEXT_PRIMARY 
                   }
                 ]}
-                placeholder="Enter assistant name..."
+                placeholder={t('ASSISTANT_NAME_PLACEHOLDER')}
                 placeholderTextColor={colors.TEXT_SECONDARY}
                 value={tempAssistantName}
                 onChangeText={setTempAssistantName}
@@ -221,16 +259,16 @@ const SettingsModal = ({
                 style={[styles.saveButton, { backgroundColor: colors.ACCENT }]}
                 onPress={handleAssistantNameSave}
               >
-                <Text style={styles.saveButtonText}>Save</Text>
+                <Text style={styles.saveButtonText}>{t('SAVE')}</Text>
               </TouchableOpacity>
             </View>
             <Text style={[styles.characterCount, { color: colors.TEXT_SECONDARY }]}>
-              {tempAssistantName.length}/20 characters
+              {tempAssistantName.length}/20 {t('ASSISTANT_NAME_CHARACTERS')}
             </Text>
             
             {/* Suggested Names */}
             <Text style={[styles.suggestedTitle, { color: colors.TEXT_PRIMARY }]}>
-              Quick suggestions:
+              {t('ASSISTANT_NAME_SUGGESTIONS')}
             </Text>
             <View style={styles.suggestedNamesContainer}>
               {suggestedNames.map((name) => (
@@ -253,28 +291,41 @@ const SettingsModal = ({
             </View>
           </View>
 
+          {/* Language Selection */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
+              {t('LANGUAGE_SECTION')}
+            </Text>
+            <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
+              {t('LANGUAGE_DESCRIPTION')}
+            </Text>
+            <View style={styles.optionsContainer}>
+              {languageOptions.map(renderLanguageOption)}
+            </View>
+          </View>
+
           {/* Theme Selection */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              Theme
+              {t('THEME_SECTION')}
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
-              Choose your preferred theme
+              {t('THEME_DESCRIPTION')}
             </Text>
             <View style={styles.optionsContainer}>
-              {renderThemeOption('SYSTEM', 'Follow System', 'phone-portrait')}
-              {renderThemeOption('LIGHT', 'Light Mode', 'sunny')}
-              {renderThemeOption('DARK', 'Dark Mode', 'moon')}
+              {renderThemeOption('SYSTEM', t('THEME_SYSTEM'), 'phone-portrait')}
+              {renderThemeOption('LIGHT', t('THEME_LIGHT'), 'sunny')}
+              {renderThemeOption('DARK', t('THEME_DARK'), 'moon')}
             </View>
           </View>
 
           {/* Accent Color Selection */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              Accent Color
+              {t('ACCENT_COLOR_SECTION')}
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
-              Customize your app's accent color
+              {t('ACCENT_COLOR_DESCRIPTION')}
             </Text>
             <View style={styles.colorsGrid}>
               {accentOptions.map(renderAccentOption)}
@@ -284,17 +335,17 @@ const SettingsModal = ({
           {/* Preview */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              Preview
+              {t('PREVIEW_SECTION')}
             </Text>
             <View style={[styles.previewContainer, { backgroundColor: colors.SECONDARY_BACKGROUND, borderColor: colors.BORDER }]}>
               <View style={[styles.previewBubble, { backgroundColor: colors.BUBBLE_USER }]}>
                 <Text style={[styles.previewText, { color: colors.BUBBLE_TEXT_USER }]}>
-                  Your message
+                  {t('PREVIEW_USER_MESSAGE')}
                 </Text>
               </View>
               <View style={[styles.previewBubble, { backgroundColor: colors.BUBBLE_ASSISTANT, alignSelf: 'flex-start' }]}>
                 <Text style={[styles.previewText, { color: colors.BUBBLE_TEXT_ASSISTANT }]}>
-                  Assistant response
+                  {t('PREVIEW_ASSISTANT_MESSAGE')}
                 </Text>
               </View>
             </View>
@@ -303,12 +354,12 @@ const SettingsModal = ({
           {/* Credits */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              Credits
+              {t('CREDITS_SECTION')}
             </Text>
             <View style={[styles.creditsContainer, { backgroundColor: colors.SECONDARY_BACKGROUND, borderColor: colors.BORDER }]}>
               <Text style={[styles.creditsText, { color: colors.TEXT_SECONDARY }]}>
                 <Text style={[styles.creditsBold, { color: colors.TEXT_PRIMARY }]}>HawkAI</Text>
-                {'\n'}Developed by{' '}
+                {'\n'}{t('CREDITS_DEVELOPED_BY')}{' '}
               </Text>
               <TouchableOpacity onPress={handleOpenCV} style={styles.developerLink}>
                 <Text style={[styles.creditsBold, styles.clickableText, { color: colors.ACCENT }]}>
@@ -316,9 +367,9 @@ const SettingsModal = ({
                 </Text>
               </TouchableOpacity>
               <Text style={[styles.creditsText, { color: colors.TEXT_SECONDARY }]}>
-                {'\n'}Powered by Google Gemini AI
-                {'\n'}Built with React Native & Expo
-                {'\n'}🦅BloodyHawk Studio
+                {'\n'}{t('CREDITS_POWERED_BY')}
+                {'\n'}{t('CREDITS_BUILT_WITH')}
+                {'\n'}{t('CREDITS_COMPANY')}
               </Text>
             </View>
           </View>

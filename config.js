@@ -81,6 +81,7 @@ What would you like to know?`,
     // Default settings
     DEFAULT_THEME: 'SYSTEM',
     DEFAULT_ACCENT: 'UNICORN_DREAMS',
+    DEFAULT_LANGUAGE: 'en',
   },
 
   // Cost Optimization Settings
@@ -144,18 +145,18 @@ export const getThemeColors = (themeName, accentColor) => {
 };
 
 // Get available accent color options
-export const getAccentColorOptions = () => {
+export const getAccentColorOptions = (t) => {
   const colorNames = {
-    UNICORN_DREAMS: 'Unicorn Dreams',
-    BUBBLEGUM_POP: 'Bubblegum Pop',
-    MINTY_FRESH: 'Minty Fresh',
-    SUNSET_VIBES: 'Sunset Vibes',
-    PEACHY_KEEN: 'Peachy Keen',
-    COTTON_CANDY: 'Cotton Candy',
-    SKY_DREAMS: 'Sky Dreams',
-    LAVENDER_LOVE: 'Lavender Love',
-    MERMAID_TAIL: 'Mermaid Tail',
-    FLAMINGO_SASS: 'Flamingo Sass',
+    UNICORN_DREAMS: t ? t('COLOR_UNICORN_DREAMS') : 'Unicorn Dreams',
+    BUBBLEGUM_POP: t ? t('COLOR_BUBBLEGUM_POP') : 'Bubblegum Pop',
+    MINTY_FRESH: t ? t('COLOR_MINTY_FRESH') : 'Minty Fresh',
+    SUNSET_VIBES: t ? t('COLOR_SUNSET_VIBES') : 'Sunset Vibes',
+    PEACHY_KEEN: t ? t('COLOR_PEACHY_KEEN') : 'Peachy Keen',
+    COTTON_CANDY: t ? t('COLOR_COTTON_CANDY') : 'Cotton Candy',
+    SKY_DREAMS: t ? t('COLOR_SKY_DREAMS') : 'Sky Dreams',
+    LAVENDER_LOVE: t ? t('COLOR_LAVENDER_LOVE') : 'Lavender Love',
+    MERMAID_TAIL: t ? t('COLOR_MERMAID_TAIL') : 'Mermaid Tail',
+    FLAMINGO_SASS: t ? t('COLOR_FLAMINGO_SASS') : 'Flamingo Sass',
   };
   
   return Object.keys(CONFIG.UI.ACCENT_COLORS).map(key => ({

@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { CONFIG, validateApiKey, optimizePrompt, getThemeColors } from './config';
+import { getTranslation, DEFAULT_LANGUAGE } from './languages';
 import SettingsModal from './components/SettingsModal';
 import ApiKeyModal from './components/ApiKeyModal';
 
@@ -26,6 +27,7 @@ export default function App() {
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [currentTheme, setCurrentTheme] = useState(CONFIG.UI.DEFAULT_THEME);
   const [currentAccent, setCurrentAccent] = useState(CONFIG.UI.DEFAULT_ACCENT);
+  const [currentLanguage, setCurrentLanguage] = useState(CONFIG.UI.DEFAULT_LANGUAGE);
   const [userApiKey, setUserApiKey] = useState('');
   const [assistantName, setAssistantName] = useState('Assistant');
   
@@ -39,6 +41,9 @@ export default function App() {
   
   // Get current theme colors
   const colors = getThemeColors(actualTheme, currentAccent);
+  
+  // Translation function
+  const t = useCallback((key) => getTranslation(key, currentLanguage), [currentLanguage]);
 
   useEffect(() => {
     // Load saved preferences
@@ -50,17 +55,8 @@ export default function App() {
     
     // Set dynamic welcome message based on API key status
     const welcomeText = userApiKey || CONFIG.GEMINI.API_KEY !== 'YOUR_GEMINI_API_KEY_HERE' 
-      ? CONFIG.APP.WELCOME_MESSAGE
-      : `Welcome to ${CONFIG.APP.NAME}! 🔑
-
-To get started, you'll need to set up your own Gemini API key for the best experience.
-
-Tap the 🔑 key icon in the header to:
-• Get your free Gemini API key
-• Follow our step-by-step guide
-• Start chatting with AI!
-
-Your API key stays private on your device and gives you unlimited access to Google's powerful AI.`;
+      ? t('WELCOME_MESSAGE')
+      : t('WELCOME_NO_API');
 
     setMessages([
       {
@@ -74,17 +70,19 @@ Your API key stays private on your device and gives you unlimited access to Goog
         },
       },
     ]);
-  }, [userApiKey, assistantName]);
+  }, [userApiKey, assistantName, currentLanguage, t]);
 
   const loadPreferences = async () => {
     try {
       const savedTheme = await AsyncStorage.getItem('userTheme');
       const savedAccent = await AsyncStorage.getItem('userAccent');
+      const savedLanguage = await AsyncStorage.getItem('userLanguage');
       const savedApiKey = await AsyncStorage.getItem('userApiKey');
       const savedAssistantName = await AsyncStorage.getItem('assistantName');
       
       if (savedTheme) setCurrentTheme(savedTheme);
       if (savedAccent) setCurrentAccent(savedAccent);
+      if (savedLanguage) setCurrentLanguage(savedLanguage);
       if (savedApiKey) setUserApiKey(savedApiKey);
       if (savedAssistantName) setAssistantName(savedAssistantName);
     } catch (error) {
@@ -92,10 +90,11 @@ Your API key stays private on your device and gives you unlimited access to Goog
     }
   };
 
-  const savePreferences = async (theme, accent) => {
+  const savePreferences = async (theme, accent, language) => {
     try {
       await AsyncStorage.setItem('userTheme', theme);
       await AsyncStorage.setItem('userAccent', accent);
+      if (language) await AsyncStorage.setItem('userLanguage', language);
     } catch (error) {
       console.error('Failed to save preferences:', error);
     }
@@ -103,12 +102,17 @@ Your API key stays private on your device and gives you unlimited access to Goog
 
   const handleThemeChange = (newTheme) => {
     setCurrentTheme(newTheme);
-    savePreferences(newTheme, currentAccent);
+    savePreferences(newTheme, currentAccent, currentLanguage);
   };
 
   const handleAccentChange = (newAccent) => {
     setCurrentAccent(newAccent);
-    savePreferences(currentTheme, newAccent);
+    savePreferences(currentTheme, newAccent, currentLanguage);
+  };
+
+  const handleLanguageChange = (newLanguage) => {
+    setCurrentLanguage(newLanguage);
+    savePreferences(currentTheme, currentAccent, newLanguage);
   };
 
   const handleAssistantNameChange = async (newName) => {
@@ -271,6 +275,7 @@ Your API key stays private on your device and gives you unlimited access to Goog
         isLoading={isTyping}
         theme={colors}
         accentColor={colors.ACCENT}
+        t={t}
       />
 
       {/* Settings Modal */}
@@ -279,13 +284,16 @@ Your API key stays private on your device and gives you unlimited access to Goog
         onClose={() => setShowSettings(false)}
         currentTheme={currentTheme}
         currentAccent={currentAccent}
+        currentLanguage={currentLanguage}
         onThemeChange={handleThemeChange}
         onAccentChange={handleAccentChange}
+        onLanguageChange={handleLanguageChange}
         onApiKeyPress={() => setShowApiKeyModal(true)}
         onAssistantNameChange={handleAssistantNameChange}
         userApiKey={userApiKey}
         assistantName={assistantName}
         colors={colors}
+        t={t}
       />
 
       {/* API Key Modal */}
@@ -295,6 +303,7 @@ Your API key stays private on your device and gives you unlimited access to Goog
         onSaveApiKey={handleSaveApiKey}
         currentApiKey={userApiKey}
         colors={colors}
+        t={t}
       />
     </SafeAreaView>
   );

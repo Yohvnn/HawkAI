@@ -25,7 +25,7 @@
       "package": "com.yohannchanchew.hawkai"
     },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/Hawk.png",
       "bundler": "metro"
     },
     "description": "HawkAI - A smart personal assistant powered by Google Gemini AI with an intuitive chat interface.",
