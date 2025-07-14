@@ -91,29 +91,34 @@ const SettingsModal = ({
       style={[
         styles.optionButton,
         { 
-          backgroundColor: colors.SECONDARY_BACKGROUND,
+          backgroundColor: colors.CARD,
           borderColor: currentTheme === themeKey ? colors.ACCENT : colors.BORDER,
-          borderWidth: currentTheme === themeKey ? 2 : 1,
+          borderWidth: 1,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: currentTheme === themeKey ? 0.1 : 0.05,
+          shadowRadius: 2,
+          elevation: currentTheme === themeKey ? 2 : 1,
         }
       ]}
       onPress={() => onThemeChange(themeKey)}
     >
       <Ionicons 
         name={icon} 
-        size={24} 
-        color={currentTheme === themeKey ? colors.ACCENT : colors.TEXT_SECONDARY} 
+        size={22} 
+        color={currentTheme === themeKey ? colors.ACCENT : colors.TEXT_MUTED} 
       />
       <Text style={[
         styles.optionText,
         { 
           color: currentTheme === themeKey ? colors.ACCENT : colors.TEXT_PRIMARY,
-          fontWeight: currentTheme === themeKey ? 'bold' : 'normal',
+          fontWeight: currentTheme === themeKey ? '600' : '400',
         }
       ]}>
         {themeName}
       </Text>
       {currentTheme === themeKey && (
-        <Ionicons name="checkmark-circle" size={20} color={colors.ACCENT} />
+        <Ionicons name="checkmark-circle" size={18} color={colors.ACCENT} />
       )}
     </TouchableOpacity>
   );
@@ -124,29 +129,34 @@ const SettingsModal = ({
       style={[
         styles.optionButton,
         { 
-          backgroundColor: colors.SECONDARY_BACKGROUND,
+          backgroundColor: colors.CARD,
           borderColor: currentLanguage === language.code ? colors.ACCENT : colors.BORDER,
-          borderWidth: currentLanguage === language.code ? 2 : 1,
+          borderWidth: 1,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: currentLanguage === language.code ? 0.1 : 0.05,
+          shadowRadius: 2,
+          elevation: currentLanguage === language.code ? 2 : 1,
         }
       ]}
       onPress={() => onLanguageChange(language.code)}
     >
       <Ionicons 
         name="language" 
-        size={24} 
-        color={currentLanguage === language.code ? colors.ACCENT : colors.TEXT_SECONDARY} 
+        size={22} 
+        color={currentLanguage === language.code ? colors.ACCENT : colors.TEXT_MUTED} 
       />
       <Text style={[
         styles.optionText,
         { 
           color: currentLanguage === language.code ? colors.ACCENT : colors.TEXT_PRIMARY,
-          fontWeight: currentLanguage === language.code ? 'bold' : 'normal',
+          fontWeight: currentLanguage === language.code ? '600' : '400',
         }
       ]}>
         {language.name}
       </Text>
       {currentLanguage === language.code && (
-        <Ionicons name="checkmark-circle" size={20} color={colors.ACCENT} />
+        <Ionicons name="checkmark-circle" size={18} color={colors.ACCENT} />
       )}
     </TouchableOpacity>
   );
@@ -157,9 +167,14 @@ const SettingsModal = ({
       style={[
         styles.colorButton,
         { 
-          backgroundColor: colors.SECONDARY_BACKGROUND,
+          backgroundColor: colors.CARD,
           borderColor: currentAccent === option.name ? option.color : colors.BORDER,
-          borderWidth: currentAccent === option.name ? 3 : 1,
+          borderWidth: 1,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: currentAccent === option.name ? 0.1 : 0.05,
+          shadowRadius: 2,
+          elevation: currentAccent === option.name ? 2 : 1,
         }
       ]}
       onPress={() => onAccentChange(option.name)}
@@ -169,7 +184,7 @@ const SettingsModal = ({
         styles.colorText,
         { 
           color: currentAccent === option.name ? option.color : colors.TEXT_PRIMARY,
-          fontWeight: currentAccent === option.name ? 'bold' : 'normal',
+          fontWeight: currentAccent === option.name ? '600' : '400',
         }
       ]}>
         {option.displayName}
@@ -189,10 +204,26 @@ const SettingsModal = ({
     >
       <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
         {/* Header */}
-        <View style={[styles.header, { backgroundColor: colors.BACKGROUND, borderBottomColor: colors.BORDER }]}>
-          <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{t('SETTINGS_TITLE')}</Text>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={24} color={colors.TEXT_PRIMARY} />
+        <View style={[styles.header, { 
+          backgroundColor: colors.BACKGROUND, 
+          borderBottomColor: colors.BORDER,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.05,
+          shadowRadius: 2,
+          elevation: 1,
+        }]}>
+          <Text style={[styles.headerTitle, { 
+            color: colors.TEXT_PRIMARY,
+            fontWeight: '600',
+            fontSize: 18,
+          }]}>{t('SETTINGS_TITLE')}</Text>
+          <TouchableOpacity onPress={onClose} style={[styles.closeButton, {
+            backgroundColor: colors.BACKGROUND,
+            borderRadius: 6,
+            padding: 6,
+          }]}>
+            <Ionicons name="chevron-down" size={20} color={colors.TEXT_MUTED} />
           </TouchableOpacity>
         </View>
 
@@ -209,9 +240,14 @@ const SettingsModal = ({
               style={[
                 styles.apiKeyButton,
                 { 
-                  backgroundColor: colors.SECONDARY_BACKGROUND,
+                  backgroundColor: colors.CARD,
                   borderColor: userApiKey ? colors.ACCENT : '#FF9500',
                   borderWidth: 1,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.05,
+                  shadowRadius: 2,
+                  elevation: 1,
                 }
               ]}
               onPress={onApiKeyPress}
@@ -259,13 +295,18 @@ const SettingsModal = ({
                 style={[
                   styles.nameInput,
                   { 
-                    backgroundColor: colors.INPUT_BACKGROUND,
+                    backgroundColor: colors.CARD,
                     borderColor: colors.BORDER,
-                    color: colors.TEXT_PRIMARY 
+                    color: colors.TEXT_PRIMARY,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.05,
+                    shadowRadius: 2,
+                    elevation: 1,
                   }
                 ]}
                 placeholder={t('ASSISTANT_NAME_PLACEHOLDER')}
-                placeholderTextColor={colors.TEXT_SECONDARY}
+                placeholderTextColor={colors.TEXT_MUTED}
                 value={tempAssistantName}
                 onChangeText={setTempAssistantName}
                 maxLength={20}
@@ -294,8 +335,13 @@ const SettingsModal = ({
                   style={[
                     styles.suggestedNameButton,
                     { 
-                      backgroundColor: colors.SECONDARY_BACKGROUND,
+                      backgroundColor: colors.CARD,
                       borderColor: colors.BORDER,
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 1 },
+                      shadowOpacity: 0.05,
+                      shadowRadius: 2,
+                      elevation: 1,
                     }
                   ]}
                   onPress={() => handleSuggestedName(name)}
@@ -354,14 +400,59 @@ const SettingsModal = ({
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
               {t('PREVIEW_SECTION')}
             </Text>
-            <View style={[styles.previewContainer, { backgroundColor: colors.SECONDARY_BACKGROUND, borderColor: colors.BORDER }]}>
-              <View style={[styles.previewBubble, { backgroundColor: colors.BUBBLE_USER }]}>
-                <Text style={[styles.previewText, { color: colors.BUBBLE_TEXT_USER }]}>
+            <View style={[styles.previewContainer, { 
+              backgroundColor: colors.BACKGROUND, 
+              borderColor: colors.BORDER,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.05,
+              shadowRadius: 2,
+              elevation: 1,
+            }]}>
+              <View style={[styles.previewBubble, { 
+                backgroundColor: colors.ACCENT,
+                borderRadius: 12,
+                borderBottomRightRadius: 4,
+                padding: 14,
+                alignSelf: 'flex-end',
+                marginBottom: 8,
+                maxWidth: '80%',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.05,
+                shadowRadius: 2,
+                elevation: 1,
+              }]}>
+                <Text style={[styles.previewText, { 
+                  color: '#FFFFFF',
+                  fontSize: 16,
+                  lineHeight: 22,
+                  fontWeight: '400',
+                }]}>
                   {t('PREVIEW_USER_MESSAGE')}
                 </Text>
               </View>
-              <View style={[styles.previewBubble, { backgroundColor: colors.BUBBLE_ASSISTANT, alignSelf: 'flex-start' }]}>
-                <Text style={[styles.previewText, { color: colors.BUBBLE_TEXT_ASSISTANT }]}>
+              <View style={[styles.previewBubble, { 
+                backgroundColor: colors.CARD,
+                borderRadius: 12,
+                borderBottomLeftRadius: 4,
+                borderWidth: 1,
+                borderColor: colors.BORDER,
+                padding: 14,
+                alignSelf: 'flex-start',
+                maxWidth: '80%',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.05,
+                shadowRadius: 2,
+                elevation: 1,
+              }]}>
+                <Text style={[styles.previewText, { 
+                  color: colors.TEXT_PRIMARY,
+                  fontSize: 16,
+                  lineHeight: 22,
+                  fontWeight: '400',
+                }]}>
                   {t('PREVIEW_ASSISTANT_MESSAGE')}
                 </Text>
               </View>
@@ -373,7 +464,15 @@ const SettingsModal = ({
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
               {t('CREDITS_SECTION')}
             </Text>
-            <View style={[styles.creditsContainer, { backgroundColor: colors.SECONDARY_BACKGROUND, borderColor: colors.BORDER }]}>
+            <View style={[styles.creditsContainer, { 
+              backgroundColor: colors.CARD, 
+              borderColor: colors.BORDER,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.05,
+              shadowRadius: 2,
+              elevation: 1,
+            }]}>
               <Text style={[styles.creditsText, { color: colors.TEXT_SECONDARY }]}>
                 <Text style={[styles.creditsBold, { color: colors.TEXT_PRIMARY }]}>HawkAI</Text>
                 {'\n'}{t('CREDITS_DEVELOPED_BY')}{' '}

@@ -32,49 +32,55 @@ What would you like to know?`,
   UI: {
     // Available accent colors with darker shades for better text visibility
     ACCENT_COLORS: {
-      UNICORN_DREAMS: '#7B68B8',    // Darker Purple
-      BUBBLEGUM_POP: '#E91E63',     // Darker Pink
-      MINTY_FRESH: '#4CAF50',       // Darker Green
-      SUNSET_VIBES: '#F44336',      // Darker Red/Coral
-      PEACHY_KEEN: '#FF9800',       // Darker Orange
-      COTTON_CANDY: '#FFC107',      // Darker Yellow
-      SKY_DREAMS: '#2196F3',        // Darker Blue
-      LAVENDER_LOVE: '#9C27B0',     // Darker Lavender/Purple
-      MERMAID_TAIL: '#009688',      // Darker Teal
-      FLAMINGO_SASS: '#E91E63',     // Darker Pink-Red
+      UNICORN_DREAMS: '#5B4A8B',    // Much Darker Purple
+      BUBBLEGUM_POP: '#C2185B',     // Much Darker Pink
+      MINTY_FRESH: '#388E3C',       // Much Darker Green
+      SUNSET_VIBES: '#D32F2F',      // Much Darker Red/Coral
+      PEACHY_KEEN: '#F57C00',       // Much Darker Orange
+      COTTON_CANDY: '#F9A825',      // Much Darker Yellow
+      SKY_DREAMS: '#1976D2',        // Much Darker Blue
+      LAVENDER_LOVE: '#7B1FA2',     // Much Darker Lavender/Purple
+      MERMAID_TAIL: '#00695C',      // Much Darker Teal
+      FLAMINGO_SASS: '#AD1457',     // Much Darker Pink-Red
     },
     
-    // Theme configurations
+    // shadcn/ui inspired themes
     THEMES: {
       LIGHT: {
-        BACKGROUND: '#FFFFFF',
-        SECONDARY_BACKGROUND: '#F8F9FA',
-        TEXT_PRIMARY: '#000000',
-        TEXT_SECONDARY: '#666666',
-        BUBBLE_USER: '#007AFF', // Will be replaced by selected accent
-        BUBBLE_ASSISTANT: '#F0F0F0',
-        BUBBLE_TEXT_USER: '#FFFFFF',
-        BUBBLE_TEXT_ASSISTANT: '#000000',
-        INPUT_BACKGROUND: '#eeeeeeff',
-        MESSAGE_BUBBLE: '#F0F0F0',
-        BORDER: '#E1E8ED',
-        HEADER_TEXT: '#FFFFFF',
+        BACKGROUND: '#ffffff',
+        CARD: '#ffffff',
+        POPOVER: '#ffffff',
+        TEXT_PRIMARY: '#0a0a0a',
+        TEXT_SECONDARY: '#71717a',
+        TEXT_MUTED: '#a1a1aa',
+        BORDER: '#e4e4e7',
+        INPUT: '#ffffff',
+        RING: '#18181b',
+        BUBBLE_USER: '#18181b',
+        BUBBLE_ASSISTANT: '#f4f4f5',
+        BUBBLE_TEXT_USER: '#fafafa',
+        BUBBLE_TEXT_ASSISTANT: '#0a0a0a',
+        INPUT_BACKGROUND: '#ffffff',
         STATUS_BAR: 'dark',
+        ACCENT: '#18181b',
       },
       DARK: {
-        BACKGROUND: '#000000',
-        SECONDARY_BACKGROUND: '#1C1C1E',
-        TEXT_PRIMARY: '#FFFFFF',
-        TEXT_SECONDARY: '#999999',
-        BUBBLE_USER: '#007AFF', // Will be replaced by selected accent
-        BUBBLE_ASSISTANT: '#2C2C2E',
-        BUBBLE_TEXT_USER: '#FFFFFF',
-        BUBBLE_TEXT_ASSISTANT: '#FFFFFF',
-        INPUT_BACKGROUND: '#1C1C1E',
-        MESSAGE_BUBBLE: '#2C2C2E',
-        BORDER: '#38383A',
-        HEADER_TEXT: '#FFFFFF',
+        BACKGROUND: '#000000ff',
+        CARD: '#0a0a0a',
+        POPOVER: '#0a0a0a',
+        TEXT_PRIMARY: '#fafafa',
+        TEXT_SECONDARY: '#a1a1aa',
+        TEXT_MUTED: '#71717a',
+        BORDER: '#171717',
+        INPUT: '#0a0a0a',
+        RING: '#d4d4d8',
+        BUBBLE_USER: '#fafafa',
+        BUBBLE_ASSISTANT: '#0a0a0a',
+        BUBBLE_TEXT_USER: '#0a0a0a',
+        BUBBLE_TEXT_ASSISTANT: '#fafafa',
+        INPUT_BACKGROUND: '#0a0a0a',
         STATUS_BAR: 'light',
+        ACCENT: '#fafafa',
       },
     },
     

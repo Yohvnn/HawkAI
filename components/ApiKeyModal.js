@@ -64,7 +64,14 @@ const ApiKeyModal = ({
   };
 
   const renderInstructions = () => (
-    <View style={[styles.instructionsContainer, { backgroundColor: colors.SECONDARY_BACKGROUND }]}>
+    <View style={[styles.instructionsContainer, {
+      backgroundColor: colors.CARD,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 1,
+    }]}>
       <Text style={[styles.instructionsTitle, { color: colors.TEXT_PRIMARY }]}>
         How to Get Your Gemini API Key
       </Text>
@@ -112,16 +119,32 @@ const ApiKeyModal = ({
         </Text>
       </View>
 
-      <View style={[styles.note, { backgroundColor: colors.MESSAGE_BUBBLE, borderColor: colors.BORDER }]}>
+      <View style={[styles.note, {
+        backgroundColor: colors.CARD,
+        borderColor: colors.BORDER,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+      }]}>
         <Ionicons name="information-circle-outline" size={20} color={colors.ACCENT} />
-        <Text style={[styles.noteText, { color: colors.TEXT_SECONDARY }]}>
+        <Text style={[styles.noteText, { color: colors.TEXT_MUTED }]}>
           Your API key is stored locally on your device and never shared with anyone.
         </Text>
       </View>
 
-      <View style={[styles.note, { backgroundColor: colors.MESSAGE_BUBBLE, borderColor: colors.BORDER }]}>
+      <View style={[styles.note, {
+        backgroundColor: colors.CARD,
+        borderColor: colors.BORDER,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+      }]}>
         <Ionicons name="warning-outline" size={20} color="#FF9500" />
-        <Text style={[styles.noteText, { color: colors.TEXT_SECONDARY }]}>
+        <Text style={[styles.noteText, { color: colors.TEXT_MUTED }]}>
           Keep your API key secure! Don't share it with others or post it publicly.
         </Text>
       </View>
@@ -137,17 +160,39 @@ const ApiKeyModal = ({
     >
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.BACKGROUND }}>
         {/* Header */}
-        <BlurView intensity={0} style={styles.header}>
-        <View style={[styles.headerContent, { backgroundColor: colors.backgroundColor, borderBottomColor: colors.BORDER }]}>
-            <TouchableOpacity onPress={onClose} style={styles.headerButton}>
-              <Ionicons name="close" size={24} color={colors.TEXT_PRIMARY} />
+        <View style={styles.header}>
+          <View style={[styles.headerContent, {
+            borderBottomColor: colors.BORDER,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 2,
+            elevation: 1,
+          }]}>
+            <TouchableOpacity onPress={onClose} style={[styles.headerButton, {
+              backgroundColor: colors.BACKGROUND,
+              borderRadius: 6,
+              padding: 6,
+            }]}>
+              <Ionicons name="chevron-back" size={20} color={colors.TEXT_MUTED} />
             </TouchableOpacity>
-            <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>API Key Settings</Text>
-            <TouchableOpacity onPress={handleSave} style={styles.headerButton}>
-              <Text style={[styles.saveText, { color: colors.ACCENT }]}>Save</Text>
+
+            <Text style={[styles.headerTitle, {
+              color: colors.TEXT_PRIMARY,
+              fontWeight: '600',
+              fontSize: 18,
+            }]}>API Key Settings</Text>
+
+            <TouchableOpacity onPress={handleSave} style={[styles.headerButton, {
+              backgroundColor: colors.ACCENT + '10',
+              borderRadius: 6,
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+            }]}>
+              <Ionicons name="save" size={20} color={colors.ACCENT} />
             </TouchableOpacity>
           </View>
-        </BlurView>
+        </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={true}>
           {/* API Key Input Section */}
@@ -163,13 +208,18 @@ const ApiKeyModal = ({
               style={[
                 styles.apiKeyInput,
                 {
-                  backgroundColor: colors.INPUT_BACKGROUND,
+                  backgroundColor: colors.CARD,
                   borderColor: colors.BORDER,
-                  color: colors.TEXT_PRIMARY
+                  color: colors.TEXT_PRIMARY,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.05,
+                  shadowRadius: 2,
+                  elevation: 1,
                 }
               ]}
               placeholder="AIza... (paste your Gemini API key here)"
-              placeholderTextColor={colors.TEXT_SECONDARY}
+              placeholderTextColor={colors.TEXT_MUTED}
               value={apiKey}
               onChangeText={setApiKey}
               multiline

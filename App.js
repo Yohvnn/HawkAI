@@ -240,30 +240,29 @@ export default function App() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
       <StatusBar style={colors.STATUS_BAR} />
       
-      {/* Header */}
-        <View
-          intensity={0}
-          tint={colors.STATUS_BAR === 'dark' ? 'light' : 'dark'}
-          style={[styles.header]}
-        >
-          <View style={styles.headerContent}>
-            <View style={styles.headerIcon}>
-          {/* <Ionicons name="chatbubble-ellipses" size={28} color={colors.TEXT_PRIMARY} /> */}
-            </View>
-            <View style={styles.headerText}>
-          <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{CONFIG.APP.NAME}</Text>
-          <Text style={[styles.headerSubtitle, { color: colors.TEXT_SECONDARY }]}>
-            {!genAI ? 'Setup API Key Required' : isTyping ? `${assistantName} is typing...` : `Online • ${assistantName}`}
-          </Text>
-            </View>
-            <TouchableOpacity 
-          style={[styles.settingsButton, { backgroundColor: colors.TEXT_PRIMARY + '10' }]} 
-          onPress={() => setShowSettings(true)}
-            >
-          <Ionicons name="settings" size={24} color={colors.ACCENT} />
-            </TouchableOpacity>
+      {/* Header with shadcn/ui styling */}
+      <View style={[styles.header, { 
+        backgroundColor: colors.BACKGROUND,
+        borderBottomColor: colors.BORDER,
+      }]}>
+        <View style={styles.headerContent}>
+          <View style={styles.headerText}>
+            <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{CONFIG.APP.NAME}</Text>
+            <Text style={[styles.headerSubtitle, { color: colors.TEXT_MUTED }]}>
+              {!genAI ? 'Setup API Key Required' : isTyping ? `${assistantName} is typing...` : `Online • ${assistantName}`}
+            </Text>
           </View>
+          <TouchableOpacity 
+            style={[styles.settingsButton, { 
+              backgroundColor: colors.CARD,
+              borderColor: colors.BORDER,
+            }]} 
+            onPress={() => setShowSettings(true)}
+          >
+            <Ionicons name="settings-outline" size={20} color={colors.TEXT_SECONDARY} />
+          </TouchableOpacity>
         </View>
+      </View>
 
         {/* Chat Interface */}
       <CustomChat
@@ -315,38 +314,68 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 30,
-    paddingBottom: 15,
+    paddingBottom: 10,
     paddingHorizontal: 20,
+    // borderBottomWidth: 1,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 5,
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
   },
-  // headerIcon: {
-  //   marginRight: 15,
-  // },
+  headerIcon: {
+    // marginRight removed for gap usage
+  },
+  appIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
   headerText: {
     flex: 1,
   },
   headerTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 1,
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 2,
   },
   headerSubtitle: {
     fontSize: 14,
-    opacity: 0.9,
+    fontWeight: '400',
   },
   settingsButton: {
-    padding: 8,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
 });
