@@ -84,12 +84,16 @@ export default function App() {
       if (savedTheme) setCurrentTheme(savedTheme);
       if (savedAccent) setCurrentAccent(savedAccent);
       if (savedLanguage) setCurrentLanguage(savedLanguage);
-      if (savedProvider) setCurrentProvider(savedProvider);
+      
+      // Force Gemini provider since OpenAI is temporarily disabled
+      const providerToUse = 'GEMINI';
+      setCurrentProvider(providerToUse);
+      
       if (savedApiKey) {
         setUserApiKey(savedApiKey);
-        // Initialize AI service with saved provider and API key
+        // Initialize AI service with Gemini provider and API key
         try {
-          await aiService.initialize(savedProvider || CONFIG.DEFAULT_AI_PROVIDER, savedApiKey);
+          await aiService.initialize(providerToUse, savedApiKey);
         } catch (error) {
           console.warn('Failed to initialize AI service with saved credentials:', error);
         }
@@ -249,15 +253,9 @@ export default function App() {
     } catch (error) {
       console.error('Error getting AI response:', error);
       
-      let errorMessage = t('ERROR_GENERAL');
-      
-      // Check for specific error types
+      let errorMessage = 'Sorry, I encountered an error. Please try again.';
       if (error.message.includes('API key')) {
-        errorMessage = t('ERROR_API_KEY');
-      } else if (error.message.includes('429') || error.message.includes('quota') || error.message.includes('exceeded your current quota')) {
-        errorMessage = t('ERROR_QUOTA_EXCEEDED');
-      } else if (error.message.includes('overloaded') || error.message.includes('503')) {
-        errorMessage = t('ERROR_OVERLOADED');
+        errorMessage = `Please check your ${CONFIG.AI_PROVIDERS[currentProvider].name} API key configuration.`;
       }
       
       const errorResponse = {
