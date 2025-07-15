@@ -14,12 +14,14 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import { CONFIG } from '../config';
 
 const ApiKeyModal = ({
   visible,
   onClose,
   onSaveApiKey,
   currentApiKey = '',
+  currentProvider = CONFIG.DEFAULT_AI_PROVIDER,
   colors
 }) => {
   const [apiKey, setApiKey] = useState(currentApiKey);
@@ -46,12 +48,27 @@ const ApiKeyModal = ({
       return;
     }
 
-    // Basic validation for Gemini API key format
-    if (!apiKey.startsWith('AIza') || apiKey.length < 35) {
-      Alert.alert(
-        'Invalid API Key',
-        'This doesn\'t look like a valid Gemini API key. Gemini API keys typically start with "AIza" and are longer than 35 characters.'
-      );
+    // Use provider-specific validation
+    const providerConfig = CONFIG.AI_PROVIDERS[currentProvider];
+    if (!providerConfig) {
+      Alert.alert('Error', 'Invalid AI provider selected');
+      return;
+    }
+
+    // Basic validation based on provider
+    let isValidFormat = false;
+    let errorMessage = '';
+    
+    if (currentProvider === 'GEMINI') {
+      isValidFormat = apiKey.startsWith('AIza') && apiKey.length >= 35;
+      errorMessage = 'This doesn\'t look like a valid Gemini API key. Gemini API keys typically start with "AIza" and are longer than 35 characters.';
+    } else if (currentProvider === 'OPENAI') {
+      isValidFormat = apiKey.startsWith('sk-') && apiKey.length >= 40;
+      errorMessage = 'This doesn\'t look like a valid OpenAI API key. OpenAI API keys typically start with "sk-" and are longer than 40 characters.';
+    }
+
+    if (!isValidFormat) {
+      Alert.alert('Invalid API Key', errorMessage);
       return;
     }
 
@@ -73,51 +90,100 @@ const ApiKeyModal = ({
       elevation: 1,
     }]}>
       <Text style={[styles.instructionsTitle, { color: colors.TEXT_PRIMARY }]}>
-        How to Get Your Gemini API Key
+        How to Get Your {CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI'} API Key
       </Text>
 
-      <View style={styles.step}>
-        <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>1.</Text>
-        <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
-          Visit Google AI Studio and sign in with your Google account
-        </Text>
-      </View>
+      {currentProvider === 'GEMINI' ? (
+        <>
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>1.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Visit Google AI Studio and sign in with your Google account
+            </Text>
+          </View>
 
-      <TouchableOpacity
-        style={[styles.linkButton, { backgroundColor: colors.ACCENT }]}
-        onPress={openGeminiAPIPage}
-      >
-        <Ionicons name="open-outline" size={20} color="#FFFFFF" />
-        <Text style={styles.linkButtonText}>Open Google AI Studio</Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.linkButton, { backgroundColor: colors.ACCENT }]}
+            onPress={openGeminiAPIPage}
+          >
+            <Ionicons name="open-outline" size={20} color="#FFFFFF" />
+            <Text style={styles.linkButtonText}>Open Google AI Studio</Text>
+          </TouchableOpacity>
 
-      <View style={styles.step}>
-        <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>2.</Text>
-        <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
-          Click "Get API Key" or "Create API Key" button
-        </Text>
-      </View>
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>2.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Click "Get API Key" or "Create API Key" button
+            </Text>
+          </View>
 
-      <View style={styles.step}>
-        <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>3.</Text>
-        <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
-          Create a new project or select an existing one
-        </Text>
-      </View>
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>3.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Create a new project or select an existing one
+            </Text>
+          </View>
 
-      <View style={styles.step}>
-        <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>4.</Text>
-        <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
-          Copy the generated API key (starts with "AIza...")
-        </Text>
-      </View>
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>4.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Copy the generated API key (starts with "AIza...")
+            </Text>
+          </View>
 
-      <View style={styles.step}>
-        <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>5.</Text>
-        <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
-          Paste it in the field below and save
-        </Text>
-      </View>
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>5.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Paste it in the field below and save
+            </Text>
+          </View>
+        </>
+      ) : (
+        <>
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>1.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Visit OpenAI Platform and sign in to your account
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.linkButton, { backgroundColor: colors.ACCENT }]}
+            onPress={() => Linking.openURL('https://platform.openai.com/api-keys')}
+          >
+            <Ionicons name="open-outline" size={20} color="#FFFFFF" />
+            <Text style={styles.linkButtonText}>Open OpenAI Platform</Text>
+          </TouchableOpacity>
+
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>2.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Click "Create new secret key" button
+            </Text>
+          </View>
+
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>3.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Give your key a name and set permissions
+            </Text>
+          </View>
+
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>4.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Copy the generated API key (starts with "sk-...")
+            </Text>
+          </View>
+
+          <View style={styles.step}>
+            <Text style={[styles.stepNumber, { color: colors.ACCENT }]}>5.</Text>
+            <Text style={[styles.stepText, { color: colors.TEXT_PRIMARY }]}>
+              Paste it in the field below and save
+            </Text>
+          </View>
+        </>
+      )}
 
       <View style={[styles.note, {
         backgroundColor: colors.CARD,
@@ -198,10 +264,10 @@ const ApiKeyModal = ({
           {/* API Key Input Section */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
-              Your Gemini API Key
+              Your {CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI'} API Key
             </Text>
             <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
-              Enter your personal Gemini API key to start chatting with AI
+              Enter your personal {CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI'} API key to start chatting with AI
             </Text>
 
             <TextInput
@@ -218,7 +284,7 @@ const ApiKeyModal = ({
                   elevation: 1,
                 }
               ]}
-              placeholder="AIza... (paste your Gemini API key here)"
+              placeholder={`${currentProvider === 'GEMINI' ? 'AIza...' : 'sk-...'} (paste your ${CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI'} API key here)`}
               placeholderTextColor={colors.TEXT_MUTED}
               value={apiKey}
               onChangeText={setApiKey}

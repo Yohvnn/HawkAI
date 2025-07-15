@@ -2,13 +2,32 @@
 // This file contains settings for API integration and app behavior
 
 export const CONFIG = {
-  // Gemini AI Configuration
+  // AI Provider Configuration
+  AI_PROVIDERS: {
+    GEMINI: {
+      name: 'Google Gemini',
+      // Get your API key from: https://makersuite.google.com/app/apikey
+      API_KEY: process.env.EXPO_PUBLIC_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE',
+      MODEL_NAME: 'gemini-1.5-flash', // Most cost-effective model
+      MAX_TOKENS: 150,
+      TEMPERATURE: 0.7,
+    },
+    OPENAI: {
+      name: 'OpenAI GPT',
+      // Get your API key from: https://platform.openai.com/api-keys
+      API_KEY: process.env.EXPO_PUBLIC_OPENAI_API_KEY || 'YOUR_OPENAI_API_KEY_HERE',
+      MODEL_NAME: 'gpt-4o-mini', // Most cost-effective model
+      MAX_TOKENS: 150,
+      TEMPERATURE: 0.7,
+    },
+  },
+
+  // Gemini AI Configuration (for backward compatibility)
   GEMINI: {
-    // Get your API key from: https://makersuite.google.com/app/apikey
-    API_KEY: process.env.EXPO_PUBLIC_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE', // Will be loaded from environment
-    MODEL_NAME: 'gemini-1.5-flash', // Most cost-effective model
-    MAX_TOKENS: 150, // Limit response length for cost control
-    TEMPERATURE: 0.7, // Controls randomness (0.0 to 1.0)
+    API_KEY: process.env.EXPO_PUBLIC_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE',
+    MODEL_NAME: 'gemini-1.5-flash',
+    MAX_TOKENS: 150,
+    TEMPERATURE: 0.7,
   },
 
   // App Settings
@@ -88,6 +107,7 @@ What would you like to know?`,
     DEFAULT_THEME: 'SYSTEM',
     DEFAULT_ACCENT: 'UNICORN_DREAMS',
     DEFAULT_LANGUAGE: 'en',
+    DEFAULT_AI_PROVIDER: 'GEMINI', // Default AI provider
   },
 
   // Cost Optimization Settings
@@ -101,25 +121,50 @@ What would you like to know?`,
   },
 };
 
-// Validation function for API key
-export const validateApiKey = (apiKey) => {
-  if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
+// Validation function for API keys
+export const validateApiKey = (apiKey, provider = 'GEMINI') => {
+  if (!apiKey) {
     return {
       isValid: false,
-      message: 'Please add your Gemini API key in config.js',
+      message: `Please add your ${provider === 'GEMINI' ? 'Gemini' : 'OpenAI'} API key`,
+    };
+  }
+
+  // Check for default placeholder keys
+  if (apiKey === 'YOUR_GEMINI_API_KEY_HERE' || apiKey === 'YOUR_OPENAI_API_KEY_HERE') {
+    return {
+      isValid: false,
+      message: `Please replace the placeholder with your actual ${provider === 'GEMINI' ? 'Gemini' : 'OpenAI'} API key`,
     };
   }
   
+  // Provider-specific validation
+  if (provider === 'GEMINI') {
+    if (!apiKey.startsWith('AIza') || apiKey.length < 35) {
+      return {
+        isValid: false,
+        message: 'Invalid Gemini API key format. Keys should start with "AIza" and be longer than 35 characters.',
+      };
+    }
+  } else if (provider === 'OPENAI') {
+    if (!apiKey.startsWith('sk-') || apiKey.length < 40) {
+      return {
+        isValid: false,
+        message: 'Invalid OpenAI API key format. Keys should start with "sk-" and be longer than 40 characters.',
+      };
+    }
+  }
+
   if (apiKey.length < 10) {
     return {
       isValid: false,
-      message: 'API key appears to be invalid',
+      message: 'API key appears to be too short',
     };
   }
 
   return {
     isValid: true,
-    message: 'API key is configured',
+    message: `${provider === 'GEMINI' ? 'Gemini' : 'OpenAI'} API key is configured`,
   };
 };
 
@@ -148,6 +193,28 @@ export const getThemeColors = (themeName, accentColor) => {
   colors.ACCENT_LIGHT = accent + '80'; // 50% opacity
   
   return colors;
+};
+
+// Get available AI providers
+export const getAIProviderOptions = (t) => {
+  return [
+    {
+      key: 'GEMINI',
+      name: CONFIG.AI_PROVIDERS.GEMINI.name,
+      displayName: t ? t('AI_PROVIDER_GEMINI') : 'Google Gemini',
+      icon: 'sparkles',
+      description: t ? t('AI_PROVIDER_GEMINI_DESC') : 'Fast and cost-effective AI responses',
+      setupUrl: 'https://makersuite.google.com/app/apikey',
+    },
+    {
+      key: 'OPENAI',
+      name: CONFIG.AI_PROVIDERS.OPENAI.name,
+      displayName: t ? t('AI_PROVIDER_OPENAI') : 'OpenAI GPT',
+      icon: 'chatbubbles',
+      description: t ? t('AI_PROVIDER_OPENAI_DESC') : 'Advanced conversational AI',
+      setupUrl: 'https://platform.openai.com/api-keys',
+    },
+  ];
 };
 
 // Get available accent color options

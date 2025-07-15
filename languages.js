@@ -42,11 +42,12 @@ What would you like to know?`,
 
     WELCOME_NO_API: `Welcome to HawkAI! 🔑
 
-You have 5 free messages to try out the app with demo responses.
+I'm designed to be lightweight, fast, and straightforward - your go-to for quick questions when in doubt.
+You have 5 free messages to try out the app with the default API Key.
 
-For unlimited AI-powered conversations:
-• Tap the settings icon to add your Gemini API key
-• Get your free API key from Google AI Studio
+For more AI-powered conversations:
+• Tap the settings icon to add your Gemini/OpenAI API key
+• Get your free API key from Google AI Studio/OpeAI API Platform
 • Start chatting with real AI responses
 
 Your conversations will be private and secure!`,
@@ -115,6 +116,11 @@ Your conversations will be private and secure!`,
     API_KEY_VALIDATION_EMPTY: 'Please enter a valid API key',
     API_KEY_VALIDATION_INVALID: 'This doesn\'t look like a valid Gemini API key. Gemini API keys typically start with "AIza" and are longer than 35 characters.',
     
+    // Error Messages
+    ERROR_QUOTA_EXCEEDED: 'You have reached your dose of AI for today! 📚\n\nPlease let me remind you to moderate your usage of AI and go find a book. Reading is a wonderful way to expand your mind and imagination.',
+    ERROR_GENERIC: 'Sorry, I encountered an error. Please try again.',
+    ERROR_API_KEY: 'Please check your API key configuration.',
+    
     // Color Names
     COLOR_UNICORN_DREAMS: 'Unicorn Dreams',
     COLOR_BUBBLEGUM_POP: 'Bubblegum Pop',
@@ -158,11 +164,12 @@ Que souhaitez-vous savoir ?`,
 
     WELCOME_NO_API: `Bienvenue sur HawkAI ! 🔑
 
-Vous avez 5 messages gratuits pour essayer l'application avec des réponses de démonstration.
+Je suis conçu pour être léger, rapide et simple - votre référence pour les questions rapides en cas de doute.
+Vous avez 5 messages gratuits pour essayer l'application avec la clé API par défaut.
 
-Pour des conversations illimitées alimentées par l'IA :
-• Appuyez sur l'icône des paramètres pour ajouter votre clé API Gemini
-• Obtenez votre clé API gratuite depuis Google AI Studio
+Pour plus de conversations alimentées par l'IA :
+• Appuyez sur l'icône des paramètres pour ajouter votre clé API Gemini/OpenAI
+• Obtenez votre clé API gratuite depuis Google AI Studio/OpeAI API Platform
 • Commencez à discuter avec de vraies réponses IA
 
 Vos conversations seront privées et sécurisées !`,
@@ -230,6 +237,11 @@ Vos conversations seront privées et sécurisées !`,
     API_KEY_BENEFIT_LIMITS: 'Aucune limite : Utilisez l\'application autant que vous le souhaitez',
     API_KEY_VALIDATION_EMPTY: 'Veuillez entrer une clé API valide',
     API_KEY_VALIDATION_INVALID: 'Cela ne ressemble pas à une clé API Gemini valide. Les clés API Gemini commencent généralement par "AIza" et font plus de 35 caractères.',
+    
+    // Error Messages
+    ERROR_QUOTA_EXCEEDED: 'Vous avez atteint votre dose d\'IA pour aujourd\'hui ! 📚\n\nPermettez-moi de vous rappeler de modérer votre utilisation de l\'IA et d\'aller chercher un livre. La lecture est une merveilleuse façon d\'élargir votre esprit et votre imagination.',
+    ERROR_GENERIC: 'Désolé, j\'ai rencontré une erreur. Veuillez réessayer.',
+    ERROR_API_KEY: 'Veuillez vérifier la configuration de votre clé API.',
     
     // Color Names
     COLOR_UNICORN_DREAMS: 'Rêves de licorne',

@@ -29,15 +29,6 @@
       "bundler": "metro"
     },
     "description": "HawkAI - A smart personal assistant powered by Google Gemini AI with an intuitive chat interface.",
-    "keywords": [
-      "hawkai",
-      "hawk",
-      "ai",
-      "assistant",
-      "gemini",
-      "chat",
-      "personal"
-    ],
     "githubUrl": "https://github.com/yohannchanchew/hawkai-assistant",
     "extra": {
       "eas": {

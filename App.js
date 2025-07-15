@@ -13,8 +13,8 @@ import CustomChat from './components/CustomChat';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { CONFIG, validateApiKey, optimizePrompt, getThemeColors } from './config';
+import { CONFIG, getThemeColors, validateApiKey } from './config';
+import { aiService } from './services/aiService';
 import { getTranslation, DEFAULT_LANGUAGE } from './languages';
 import SettingsModal from './components/SettingsModal';
 import ApiKeyModal from './components/ApiKeyModal';
@@ -22,12 +22,12 @@ import ApiKeyModal from './components/ApiKeyModal';
 export default function App() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [genAI, setGenAI] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [currentTheme, setCurrentTheme] = useState(CONFIG.UI.DEFAULT_THEME);
   const [currentAccent, setCurrentAccent] = useState(CONFIG.UI.DEFAULT_ACCENT);
   const [currentLanguage, setCurrentLanguage] = useState(CONFIG.UI.DEFAULT_LANGUAGE);
+  const [currentProvider, setCurrentProvider] = useState(CONFIG.DEFAULT_AI_PROVIDER || 'GEMINI');
   const [userApiKey, setUserApiKey] = useState('');
   const [assistantName, setAssistantName] = useState('Assistant');
   const [messageCount, setMessageCount] = useState(0); // Track user messages sent
@@ -52,10 +52,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    initializeAI();
-    
     // Set dynamic welcome message based on API key status
-    const welcomeText = userApiKey || CONFIG.GEMINI.API_KEY !== 'YOUR_GEMINI_API_KEY_HERE' 
+    const welcomeText = aiService.isReady() 
       ? t('WELCOME_MESSAGE')
       : t('WELCOME_NO_API');
 
@@ -78,6 +76,7 @@ export default function App() {
       const savedTheme = await AsyncStorage.getItem('userTheme');
       const savedAccent = await AsyncStorage.getItem('userAccent');
       const savedLanguage = await AsyncStorage.getItem('userLanguage');
+      const savedProvider = await AsyncStorage.getItem('userProvider');
       const savedApiKey = await AsyncStorage.getItem('userApiKey');
       const savedAssistantName = await AsyncStorage.getItem('assistantName');
       const savedMessageCount = await AsyncStorage.getItem('messageCount');
@@ -85,7 +84,16 @@ export default function App() {
       if (savedTheme) setCurrentTheme(savedTheme);
       if (savedAccent) setCurrentAccent(savedAccent);
       if (savedLanguage) setCurrentLanguage(savedLanguage);
-      if (savedApiKey) setUserApiKey(savedApiKey);
+      if (savedProvider) setCurrentProvider(savedProvider);
+      if (savedApiKey) {
+        setUserApiKey(savedApiKey);
+        // Initialize AI service with saved provider and API key
+        try {
+          await aiService.initialize(savedProvider || CONFIG.DEFAULT_AI_PROVIDER, savedApiKey);
+        } catch (error) {
+          console.warn('Failed to initialize AI service with saved credentials:', error);
+        }
+      }
       if (savedAssistantName) setAssistantName(savedAssistantName);
       if (savedMessageCount) setMessageCount(parseInt(savedMessageCount));
     } catch (error) {
@@ -93,11 +101,12 @@ export default function App() {
     }
   };
 
-  const savePreferences = async (theme, accent, language) => {
+  const savePreferences = async (theme, accent, language, provider) => {
     try {
       await AsyncStorage.setItem('userTheme', theme);
       await AsyncStorage.setItem('userAccent', accent);
       if (language) await AsyncStorage.setItem('userLanguage', language);
+      if (provider) await AsyncStorage.setItem('userProvider', provider);
     } catch (error) {
       console.error('Failed to save preferences:', error);
     }
@@ -105,17 +114,32 @@ export default function App() {
 
   const handleThemeChange = (newTheme) => {
     setCurrentTheme(newTheme);
-    savePreferences(newTheme, currentAccent, currentLanguage);
+    savePreferences(newTheme, currentAccent, currentLanguage, currentProvider);
   };
 
   const handleAccentChange = (newAccent) => {
     setCurrentAccent(newAccent);
-    savePreferences(currentTheme, newAccent, currentLanguage);
+    savePreferences(currentTheme, newAccent, currentLanguage, currentProvider);
   };
 
   const handleLanguageChange = (newLanguage) => {
     setCurrentLanguage(newLanguage);
-    savePreferences(currentTheme, currentAccent, newLanguage);
+    savePreferences(currentTheme, currentAccent, newLanguage, currentProvider);
+  };
+
+  const handleProviderChange = (newProvider) => {
+    setCurrentProvider(newProvider);
+    savePreferences(currentTheme, currentAccent, currentLanguage, newProvider);
+    // Reset AI service when provider changes
+    aiService.reset();
+    // If we have an API key, try to reinitialize with new provider
+    if (userApiKey) {
+      try {
+        aiService.initialize(newProvider, userApiKey);
+      } catch (error) {
+        console.warn('Failed to initialize new provider:', error);
+      }
+    }
   };
 
   const handleAssistantNameChange = async (newName) => {
@@ -128,25 +152,6 @@ export default function App() {
     }
   };
 
-  const initializeAI = () => {
-    // Use user's API key if available, otherwise fall back to default
-    const apiKeyToUse = userApiKey || CONFIG.GEMINI.API_KEY;
-    const apiValidation = validateApiKey(apiKeyToUse);
-    
-    if (apiValidation.isValid) {
-      try {
-        const ai = new GoogleGenerativeAI(apiKeyToUse);
-        setGenAI(ai);
-      } catch (error) {
-        console.error('Failed to initialize Gemini AI:', error);
-        Alert.alert('AI Initialization Error', 'Failed to connect to Gemini AI. Please check your API key.');
-      }
-    } else {
-      console.warn(apiValidation.message);
-      setGenAI(null);
-    }
-  };
-
   const handleSaveApiKey = async (newApiKey) => {
     try {
       await AsyncStorage.setItem('userApiKey', newApiKey);
@@ -155,19 +160,13 @@ export default function App() {
       setMessageCount(0);
       await AsyncStorage.setItem('messageCount', '0');
       
-      // Immediately initialize AI with the new API key
-      const apiValidation = validateApiKey(newApiKey);
-      if (apiValidation.isValid) {
-        try {
-          const ai = new GoogleGenerativeAI(newApiKey);
-          setGenAI(ai);
-          Alert.alert('Success!', 'Your API key has been saved successfully. You can now start chatting with AI!');
-        } catch (error) {
-          console.error('Failed to initialize Gemini AI with new key:', error);
-          Alert.alert('API Key Error', 'Your API key was saved but failed to initialize AI. Please check if the key is valid.');
-        }
-      } else {
-        Alert.alert('Invalid API Key', apiValidation.message);
+      // Immediately initialize AI service with the new API key
+      try {
+        const result = await aiService.initialize(currentProvider, newApiKey);
+        Alert.alert('Success!', result.message + ' You can now start chatting with unlimited messages!');
+      } catch (error) {
+        console.error('Failed to initialize AI with new key:', error);
+        Alert.alert('API Key Error', error.message || 'Failed to initialize AI. Please check if the key is valid for the selected provider.');
       }
     } catch (error) {
       console.error('Failed to save API key:', error);
@@ -185,10 +184,11 @@ export default function App() {
 
   const onSend = useCallback(async (newMessages = []) => {
     // Check message limit if no API key is set
-    if (!genAI && messageCount >= 5) {
+    if (!aiService.isReady() && messageCount >= 5) {
+      const providerName = CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI';
       Alert.alert(
         'Message Limit Reached', 
-        'You\'ve sent 5 messages! To continue chatting, please add your Gemini API key.',
+        `You've sent 5 messages! To continue chatting, please add your ${providerName} API key.`,
         [
           { text: 'Cancel', style: 'cancel' },
           { text: 'Add API Key', onPress: () => setShowApiKeyModal(true) }
@@ -198,7 +198,7 @@ export default function App() {
     }
 
     // Check if AI is initialized
-    if (!genAI) {
+    if (!aiService.isReady()) {
       // Allow message but increment counter
       const newCount = messageCount + 1;
       setMessageCount(newCount);
@@ -210,9 +210,10 @@ export default function App() {
       // Show demo response for users without API key
       setIsTyping(true);
       setTimeout(() => {
+        const providerName = CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI';
         const demoResponse = {
           _id: Math.round(Math.random() * 1000000),
-          text: `This is a demo response (${newCount}/5 free messages). To get real AI responses from Gemini, please add your API key in settings!`,
+          text: `This is a demo response (${newCount}/5 free messages). To get real AI responses from ${providerName}, please add your API key in settings!`,
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -232,7 +233,7 @@ export default function App() {
 
     try {
       const userMessage = newMessages[0].text;
-      const response = await getGeminiResponse(userMessage);
+      const response = await aiService.generateResponse(userMessage);
       
       // Add assistant response
       const assistantMessage = {
@@ -250,9 +251,14 @@ export default function App() {
     } catch (error) {
       console.error('Error getting AI response:', error);
       
-      let errorMessage = 'Sorry, I encountered an error. Please try again.';
-      if (error.message.includes('API key')) {
-        errorMessage = 'Please configure your Gemini API key in config.js file.';
+      const providerName = CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI';
+      let errorMessage = t('ERROR_GENERIC');
+      
+      // Check for quota exceeded errors
+      if (error.message.includes('quota') || error.message.includes('429') || error.message.includes('exceeded')) {
+        errorMessage = t('ERROR_QUOTA_EXCEEDED');
+      } else if (error.message.includes('API key')) {
+        errorMessage = t('ERROR_API_KEY');
       }
       
       const errorResponse = {
@@ -270,28 +276,7 @@ export default function App() {
     } finally {
       setIsTyping(false);
     }
-  }, [genAI, messageCount, assistantName]);
-
-  const getGeminiResponse = async (message) => {
-    if (!genAI) {
-      throw new Error('Gemini AI not initialized. Please check your API key.');
-    }
-
-    const model = genAI.getGenerativeModel({ 
-      model: CONFIG.GEMINI.MODEL_NAME,
-      generationConfig: {
-        maxOutputTokens: CONFIG.GEMINI.MAX_TOKENS,
-        temperature: CONFIG.GEMINI.TEMPERATURE,
-      },
-    });
-
-    // Use optimized prompt for cost efficiency
-    const optimizedPrompt = optimizePrompt(message);
-
-    const result = await model.generateContent(optimizedPrompt);
-    const response = await result.response;
-    return response.text();
-  };
+  }, [aiService, messageCount, assistantName, currentProvider, t]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
@@ -306,7 +291,7 @@ export default function App() {
           <View style={styles.headerText}>
             <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{CONFIG.APP.NAME}</Text>
             <Text style={[styles.headerSubtitle, { color: colors.TEXT_MUTED }]}>
-              {!genAI ? 
+              {!aiService.isReady() ? 
                 (messageCount >= 5 ? 'Add API Key to Continue' : `${5 - messageCount} free messages left`) : 
                 isTyping ? `${assistantName} is typing...` : `Online • ${assistantName}`
               }
@@ -344,9 +329,11 @@ export default function App() {
         currentTheme={currentTheme}
         currentAccent={currentAccent}
         currentLanguage={currentLanguage}
+        currentProvider={currentProvider}
         onThemeChange={handleThemeChange}
         onAccentChange={handleAccentChange}
         onLanguageChange={handleLanguageChange}
+        onProviderChange={handleProviderChange}
         onApiKeyPress={() => setShowApiKeyModal(true)}
         onAssistantNameChange={handleAssistantNameChange}
         userApiKey={userApiKey}
@@ -361,6 +348,7 @@ export default function App() {
         onClose={() => setShowApiKeyModal(false)}
         onSaveApiKey={handleSaveApiKey}
         currentApiKey={userApiKey}
+        currentProvider={currentProvider}
         colors={colors}
         t={t}
       />

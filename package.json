@@ -17,6 +17,7 @@
     "expo-blur": "^14.1.5",
     "expo-clipboard": "^7.1.5",
     "expo-status-bar": "~2.2.3",
+    "openai": "^5.9.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.5",
@@ -24,6 +25,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "listUnknownPackages": false
+      }
+    }
   },
   "private": true
 }

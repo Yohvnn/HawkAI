@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
-import { getAccentColorOptions } from '../config';
+import { getAccentColorOptions, getAIProviderOptions } from '../config';
 import { getAvailableLanguages } from '../languages';
 
 const SettingsModal = ({
@@ -23,9 +23,11 @@ const SettingsModal = ({
   currentTheme,
   currentAccent,
   currentLanguage,
+  currentProvider,
   onThemeChange,
   onAccentChange,
   onLanguageChange,
+  onProviderChange,
   onApiKeyPress,
   onAssistantNameChange,
   userApiKey,
@@ -36,6 +38,7 @@ const SettingsModal = ({
   const [tempAssistantName, setTempAssistantName] = useState(assistantName || t('ASSISTANT_NAME_DEFAULT'));
   const accentOptions = getAccentColorOptions(t);
   const languageOptions = getAvailableLanguages();
+  const providerOptions = getAIProviderOptions(t);
 
   // Handle Android back button
   useEffect(() => {
@@ -191,6 +194,44 @@ const SettingsModal = ({
       </Text>
       {currentAccent === option.name && (
         <Ionicons name="checkmark-circle" size={16} color={option.color} />
+      )}
+    </TouchableOpacity>
+  );
+
+  const renderProviderOption = (provider) => (
+    <TouchableOpacity
+      key={provider.key}
+      style={[
+        styles.optionButton,
+        {
+          backgroundColor: colors.CARD,
+          borderColor: currentProvider === provider.key ? colors.ACCENT : colors.BORDER,
+          borderWidth: 1,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: currentProvider === provider.key ? 0.1 : 0.05,
+          shadowRadius: 2,
+          elevation: currentProvider === provider.key ? 2 : 1,
+        }
+      ]}
+      onPress={() => onProviderChange(provider.key)}
+    >
+      <Ionicons
+        name={provider.icon}
+        size={22}
+        color={currentProvider === provider.key ? colors.ACCENT : colors.TEXT_MUTED}
+      />
+      <Text style={[
+        styles.optionText,
+        {
+          color: currentProvider === provider.key ? colors.ACCENT : colors.TEXT_PRIMARY,
+          fontWeight: currentProvider === provider.key ? '600' : '400',
+        }
+      ]}>
+        {provider.name}
+      </Text>
+      {currentProvider === provider.key && (
+        <Ionicons name="checkmark-circle" size={18} color={colors.ACCENT} />
       )}
     </TouchableOpacity>
   );
@@ -370,6 +411,19 @@ const SettingsModal = ({
             </Text>
             <View style={styles.optionsContainer}>
               {languageOptions.map(renderLanguageOption)}
+            </View>
+          </View>
+
+          {/* AI Provider Selection */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
+              AI Provider
+            </Text>
+            <Text style={[styles.sectionDescription, { color: colors.TEXT_SECONDARY }]}>
+              Choose your preferred AI provider for responses
+            </Text>
+            <View style={styles.optionsContainer}>
+              {providerOptions.map(renderProviderOption)}
             </View>
           </View>
 
