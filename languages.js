@@ -29,7 +29,7 @@ export const TRANSLATIONS = {
     ASSISTANT_TYPING: 'I am thinking...',
     
     // Welcome Message
-    WELCOME_MESSAGE: `Hello! I'm your personal assistant powered by Gemini AI. 💫
+    WELCOME_MESSAGE: `Hello! I'm your personal assistant powered by Gemini AI.
 
 I'm designed to be lightweight, fast, and straightforward - your go-to for quick questions when in doubt:
 • Instant answers to quick questions during non overwhelming moments
@@ -80,6 +80,11 @@ Your conversations will be private and secure!`,
     
     ACCENT_COLOR_SECTION: 'Accent Color',
     ACCENT_COLOR_DESCRIPTION: 'Customize your app\'s accent color',
+    CUSTOM_COLOR: 'Custom Color',
+    CUSTOM_COLOR_PLACEHOLDER: 'Enter hex color (e.g., #8B5CF6)',
+    CUSTOM_COLOR_INVALID: 'Please enter a valid hex color (e.g., #8B5CF6 or #fff)',
+    CUSTOM_COLOR_SUCCESS: 'Custom color applied successfully!',
+    PREVIEW: 'Preview',
     
     PREVIEW_SECTION: 'Preview',
     PREVIEW_USER_MESSAGE: 'Your message',
@@ -131,7 +136,7 @@ Your conversations will be private and secure!`,
     COLOR_SKY_DREAMS: 'Sky Dreams',
     COLOR_LAVENDER_LOVE: 'Lavender Love',
     COLOR_MERMAID_TAIL: 'Mermaid Tail',
-    COLOR_FLAMINGO_SASS: 'Flamingo Sass',
+    COLOR_MONOCHROME: 'Monochrome',
   },
   
   [LANGUAGES.FR]: {
@@ -151,7 +156,7 @@ Your conversations will be private and secure!`,
     ASSISTANT_TYPING: 'Je réfléchis...',
     
     // Welcome Message
-    WELCOME_MESSAGE: `Bonjour ! Je suis votre assistant personnel alimenté par Gemini AI. 💫
+    WELCOME_MESSAGE: `Bonjour ! Je suis votre assistant personnel alimenté par Gemini AI. 
 
 Je suis conçu pour être léger, rapide et simple - votre référence pour les questions rapides en cas de doute :
 • Réponses instantanées aux questions rapides lors des moments non surchargés
@@ -202,6 +207,11 @@ Vos conversations seront privées et sécurisées !`,
     
     ACCENT_COLOR_SECTION: 'Couleur d\'accent',
     ACCENT_COLOR_DESCRIPTION: 'Personnalisez la couleur d\'accent de votre application',
+    CUSTOM_COLOR: 'Couleur personnalisée',
+    CUSTOM_COLOR_PLACEHOLDER: 'Entrez une couleur hex (ex: #8B5CF6)',
+    CUSTOM_COLOR_INVALID: 'Veuillez entrer une couleur hex valide (ex: #8B5CF6 ou #fff)',
+    CUSTOM_COLOR_SUCCESS: 'Couleur personnalisée appliquée avec succès!',
+    PREVIEW: 'Aperçu',
     
     PREVIEW_SECTION: 'Aperçu',
     PREVIEW_USER_MESSAGE: 'Votre message',
@@ -253,7 +263,7 @@ Vos conversations seront privées et sécurisées !`,
     COLOR_SKY_DREAMS: 'Rêves de ciel',
     COLOR_LAVENDER_LOVE: 'Amour lavande',
     COLOR_MERMAID_TAIL: 'Queue de sirène',
-    COLOR_FLAMINGO_SASS: 'Flamant rose',
+    COLOR_MONOCHROME: 'Monochrome',
   },
 };
 

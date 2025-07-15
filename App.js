@@ -26,6 +26,7 @@ export default function App() {
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [currentTheme, setCurrentTheme] = useState(CONFIG.UI.DEFAULT_THEME);
   const [currentAccent, setCurrentAccent] = useState(CONFIG.UI.DEFAULT_ACCENT);
+  const [customAccentColor, setCustomAccentColor] = useState(null);
   const [currentLanguage, setCurrentLanguage] = useState(CONFIG.UI.DEFAULT_LANGUAGE);
   const [currentProvider, setCurrentProvider] = useState(CONFIG.DEFAULT_AI_PROVIDER);
   const [userApiKey, setUserApiKey] = useState('');
@@ -41,7 +42,7 @@ export default function App() {
     : currentTheme;
   
   // Get current theme colors
-  const colors = getThemeColors(actualTheme, currentAccent);
+  const colors = getThemeColors(actualTheme, currentAccent, customAccentColor);
   
   // Translation function
   const t = useCallback((key) => getTranslation(key, currentLanguage), [currentLanguage]);
@@ -75,6 +76,7 @@ export default function App() {
     try {
       const savedTheme = await AsyncStorage.getItem('userTheme');
       const savedAccent = await AsyncStorage.getItem('userAccent');
+      const savedCustomColor = await AsyncStorage.getItem('userCustomColor');
       const savedLanguage = await AsyncStorage.getItem('userLanguage');
       const savedProvider = await AsyncStorage.getItem('userProvider');
       const savedApiKey = await AsyncStorage.getItem('userApiKey');
@@ -83,6 +85,7 @@ export default function App() {
       
       if (savedTheme) setCurrentTheme(savedTheme);
       if (savedAccent) setCurrentAccent(savedAccent);
+      if (savedCustomColor) setCustomAccentColor(savedCustomColor);
       if (savedLanguage) setCurrentLanguage(savedLanguage);
       
       // Force Gemini provider since OpenAI is temporarily disabled
@@ -105,10 +108,15 @@ export default function App() {
     }
   };
 
-  const savePreferences = async (theme, accent, language, provider) => {
+  const savePreferences = async (theme, accent, language, provider, customColor = null) => {
     try {
       await AsyncStorage.setItem('userTheme', theme);
       await AsyncStorage.setItem('userAccent', accent);
+      if (customColor) {
+        await AsyncStorage.setItem('userCustomColor', customColor);
+      } else if (accent !== 'CUSTOM') {
+        await AsyncStorage.removeItem('userCustomColor');
+      }
       if (language) await AsyncStorage.setItem('userLanguage', language);
       if (provider) await AsyncStorage.setItem('userProvider', provider);
     } catch (error) {
@@ -118,22 +126,27 @@ export default function App() {
 
   const handleThemeChange = (newTheme) => {
     setCurrentTheme(newTheme);
-    savePreferences(newTheme, currentAccent, currentLanguage, currentProvider);
+    savePreferences(newTheme, currentAccent, currentLanguage, currentProvider, customAccentColor);
   };
 
-  const handleAccentChange = (newAccent) => {
+  const handleAccentChange = (newAccent, customColor = null) => {
     setCurrentAccent(newAccent);
-    savePreferences(currentTheme, newAccent, currentLanguage, currentProvider);
+    if (customColor) {
+      setCustomAccentColor(customColor);
+    } else if (newAccent !== 'CUSTOM') {
+      setCustomAccentColor(null);
+    }
+    savePreferences(currentTheme, newAccent, currentLanguage, currentProvider, customColor);
   };
 
   const handleLanguageChange = (newLanguage) => {
     setCurrentLanguage(newLanguage);
-    savePreferences(currentTheme, currentAccent, newLanguage, currentProvider);
+    savePreferences(currentTheme, currentAccent, newLanguage, currentProvider, customAccentColor);
   };
 
   const handleProviderChange = (newProvider) => {
     setCurrentProvider(newProvider);
-    savePreferences(currentTheme, currentAccent, currentLanguage, newProvider);
+    savePreferences(currentTheme, currentAccent, currentLanguage, newProvider, customAccentColor);
     // Reset AI service when provider changes
     aiService.reset();
     // If we have an API key, try to reinitialize with new provider
@@ -362,14 +375,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
     // borderBottomWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.05,
+    // shadowRadius: 2,
+    // elevation: 2,
   },
   headerContent: {
     flexDirection: 'row',

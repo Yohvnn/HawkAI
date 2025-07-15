@@ -36,9 +36,38 @@ const SettingsModal = ({
   t
 }) => {
   const [tempAssistantName, setTempAssistantName] = useState(assistantName || t('ASSISTANT_NAME_DEFAULT'));
+  const [customColorInput, setCustomColorInput] = useState('');
+  const [showCustomColorInput, setShowCustomColorInput] = useState(false);
   const accentOptions = getAccentColorOptions(t);
   const languageOptions = getAvailableLanguages();
   const providerOptions = getAIProviderOptions(t);
+
+  // Validate hex color code
+  const isValidHexColor = (hex) => {
+    const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+    return hexRegex.test(hex);
+  };
+
+  // Handle custom color input
+  const handleCustomColorSave = () => {
+    let colorToSave = customColorInput.trim();
+    
+    // Add # if missing
+    if (colorToSave && !colorToSave.startsWith('#')) {
+      colorToSave = '#' + colorToSave;
+    }
+    
+    if (!isValidHexColor(colorToSave)) {
+      Alert.alert(t('ERROR'), t('CUSTOM_COLOR_INVALID') || 'Please enter a valid hex color (e.g., #8B5CF6 or #fff)');
+      return;
+    }
+    
+    // Save the custom color
+    onAccentChange('CUSTOM', colorToSave);
+    setCustomColorInput('');
+    setShowCustomColorInput(false);
+    Alert.alert(t('SUCCESS'), t('CUSTOM_COLOR_SUCCESS') || 'Custom color applied successfully!');
+  };
 
   // Handle Android back button
   useEffect(() => {
@@ -252,7 +281,7 @@ const SettingsModal = ({
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.05,
           shadowRadius: 2,
-          elevation: 1,
+          elevation: 0.5,
         }]}>
           <Text style={[styles.headerTitle, {
             color: colors.TEXT_PRIMARY,
@@ -288,7 +317,7 @@ const SettingsModal = ({
                   shadowOffset: { width: 0, height: 1 },
                   shadowOpacity: 0.05,
                   shadowRadius: 2,
-                  elevation: 1,
+                  elevation: 0.5,
                 }
               ]}
               onPress={onApiKeyPress}
@@ -343,7 +372,7 @@ const SettingsModal = ({
                     shadowOffset: { width: 0, height: 1 },
                     shadowOpacity: 0.05,
                     shadowRadius: 2,
-                    elevation: 1,
+                    elevation: 0.5,
                   }
                 ]}
                 placeholder={t('ASSISTANT_NAME_PLACEHOLDER')}
@@ -388,7 +417,7 @@ const SettingsModal = ({
                       shadowOffset: { width: 0, height: 1 },
                       shadowOpacity: 0.05,
                       shadowRadius: 2,
-                      elevation: 1,
+                      elevation: 0.5,
                     }
                   ]}
                   onPress={() => handleSuggestedName(name)}
@@ -455,6 +484,93 @@ const SettingsModal = ({
             <View style={styles.colorsGrid}>
               {accentOptions.map(renderAccentOption)}
             </View>
+
+            {/* Custom Color Input */}
+            <View style={styles.customColorContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.customColorButton,
+                  {
+                    backgroundColor: colors.CARD,
+                    borderColor: showCustomColorInput ? colors.ACCENT : colors.BORDER,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.05,
+                    shadowRadius: 2,
+                    elevation: 0.5,
+                  }
+                ]}
+                onPress={() => setShowCustomColorInput(!showCustomColorInput)}
+              >
+                <Ionicons 
+                  name="color-palette" 
+                  size={20} 
+                  color={colors.TEXT_MUTED} 
+                />
+                <Text style={[styles.customColorText, { color: colors.TEXT_PRIMARY }]}>
+                  {t('CUSTOM_COLOR') || 'Custom Color'}
+                </Text>
+                <Ionicons 
+                  name={showCustomColorInput ? "chevron-up" : "chevron-down"} 
+                  size={16} 
+                  color={colors.TEXT_MUTED} 
+                />
+              </TouchableOpacity>
+
+              {showCustomColorInput && (
+                <View style={styles.customColorInputContainer}>
+                  <View style={styles.hexInputRow}>
+                    <TextInput
+                      style={[
+                        styles.customColorInput,
+                        {
+                          backgroundColor: colors.INPUT,
+                          borderColor: colors.BORDER,
+                          color: colors.TEXT_PRIMARY,
+                        }
+                      ]}
+                      placeholder={t('CUSTOM_COLOR_PLACEHOLDER') || 'Enter hex color (e.g., #8B5CF6)'}
+                      placeholderTextColor={colors.TEXT_MUTED}
+                      value={customColorInput}
+                      onChangeText={setCustomColorInput}
+                      maxLength={7}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                    />
+                    <TouchableOpacity
+                      style={[
+                        styles.customColorSaveButton,
+                        {
+                          backgroundColor: colors.ACCENT + '20',
+                          borderColor: colors.ACCENT,
+                        }
+                      ]}
+                      onPress={handleCustomColorSave}
+                    >
+                      <Ionicons name="checkmark" size={20} color={colors.ACCENT} />
+                    </TouchableOpacity>
+                  </View>
+                  
+                  {customColorInput.length > 0 && (
+                    <View style={styles.colorPreviewRow}>
+                      <Text style={[styles.previewLabel, { color: colors.TEXT_SECONDARY }]}>
+                        {t('PREVIEW') || 'Preview:'}
+                      </Text>
+                      <View 
+                        style={[
+                          styles.colorPreview, 
+                          { 
+                            backgroundColor: isValidHexColor(customColorInput.startsWith('#') ? customColorInput : '#' + customColorInput) 
+                              ? (customColorInput.startsWith('#') ? customColorInput : '#' + customColorInput)
+                              : colors.BORDER 
+                          }
+                        ]} 
+                      />
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>
           </View>
 
           {/* Preview */}
@@ -469,7 +585,7 @@ const SettingsModal = ({
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.05,
               shadowRadius: 2,
-              elevation: 1,
+              elevation: 0.5,
             }]}>
               <View style={[styles.previewBubble, {
                 backgroundColor: colors.ACCENT,
@@ -483,7 +599,7 @@ const SettingsModal = ({
                 shadowOffset: { width: 0, height: 1 },
                 shadowOpacity: 0.05,
                 shadowRadius: 2,
-                elevation: 1,
+                elevation: 0.5,
               }]}>
                 <Text style={[styles.previewText, {
                   color: '#FFFFFF',
@@ -507,7 +623,7 @@ const SettingsModal = ({
                 shadowOffset: { width: 0, height: 1 },
                 shadowOpacity: 0.05,
                 shadowRadius: 2,
-                elevation: 1,
+                elevation: 0.5,
               }]}>
                 <Text style={[styles.previewText, {
                   color: colors.TEXT_PRIMARY,
@@ -533,7 +649,7 @@ const SettingsModal = ({
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.05,
               shadowRadius: 2,
-              elevation: 1,
+              elevation: 0.5,
             }]}>
               <Text style={[styles.creditsText, { color: colors.TEXT_SECONDARY }]}>
                 <Text style={[styles.creditsBold, { color: colors.TEXT_PRIMARY }]}>HawkAI</Text>
@@ -731,6 +847,59 @@ const styles = StyleSheet.create({
   },
   clickableText: {
     textDecorationLine: 'underline',
+  },
+  // Custom Color Picker Styles
+  customColorContainer: {
+    marginTop: 16,
+  },
+  customColorButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 8,
+  },
+  customColorText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  customColorInputContainer: {
+    marginTop: 12,
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: '#f8f9fa',
+  },
+  hexInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  customColorInput: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    fontSize: 16,
+    fontFamily: 'monospace',
+  },
+  customColorSaveButton: {
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  colorPreviewRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    gap: 8,
+  },
+  previewLabel: {
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 

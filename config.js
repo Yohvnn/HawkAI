@@ -34,7 +34,7 @@ export const CONFIG = {
   APP: {
     NAME: 'HawkAI',
     VERSION: '1.0.0',
-    WELCOME_MESSAGE: `Hello! I'm your personal assistant powered by Gemini AI. 💫
+    WELCOME_MESSAGE: `Hello! I'm your personal assistant powered by Gemini AI. 
 
 I'm designed to be lightweight, fast, and straightforward - your go-to for quick questions when in doubt:
 • Instant answers to quick questions
@@ -49,20 +49,20 @@ What would you like to know?`,
 
   // UI Settings
   UI: {
-    // Available accent colors with darker shades for better text visibility
+    // Available accent colors with vibrant shades for better visual appeal
     ACCENT_COLORS: {
-      UNICORN_DREAMS: '#5B4A8B',    // Much Darker Purple
-      BUBBLEGUM_POP: '#C2185B',     // Much Darker Pink
-      MINTY_FRESH: '#388E3C',       // Much Darker Green
-      SUNSET_VIBES: '#D32F2F',      // Much Darker Red/Coral
-      PEACHY_KEEN: '#F57C00',       // Much Darker Orange
-      COTTON_CANDY: '#F9A825',      // Much Darker Yellow
-      SKY_DREAMS: '#1976D2',        // Much Darker Blue
-      LAVENDER_LOVE: '#7B1FA2',     // Much Darker Lavender/Purple
-      MERMAID_TAIL: '#00695C',      // Much Darker Teal
-      FLAMINGO_SASS: '#AD1457',     // Much Darker Pink-Red
+      UNICORN_DREAMS: '#8B5CF6',    // Vibrant Purple
+      BUBBLEGUM_POP: '#EC4899',     // Vibrant Pink
+      MINTY_FRESH: '#10B981',       // Vibrant Green
+      SUNSET_VIBES: '#F59E0B',      // Vibrant Orange
+      PEACHY_KEEN: '#EF4444',       // Vibrant Red
+      COTTON_CANDY: '#06B6D4',      // Vibrant Cyan
+      SKY_DREAMS: '#3B82F6',        // Vibrant Blue
+      LAVENDER_LOVE: '#A855F7',     // Vibrant Lavender
+      MERMAID_TAIL: '#14B8A6',      // Vibrant Teal
+      MONOCHROME: '#828282ff',            // Default for custom hex input
     },
-    
+
     // shadcn/ui inspired themes
     THEMES: {
       LIGHT: {
@@ -72,7 +72,7 @@ What would you like to know?`,
         TEXT_PRIMARY: '#0a0a0a',
         TEXT_SECONDARY: '#71717a',
         TEXT_MUTED: '#a1a1aa',
-        BORDER: '#e4e4e7',
+        BORDER: '#e5e5e5',
         INPUT: '#ffffff',
         RING: '#18181b',
         BUBBLE_USER: '#18181b',
@@ -102,7 +102,7 @@ What would you like to know?`,
         ACCENT: '#fafafa',
       },
     },
-    
+
     // Default settings
     DEFAULT_THEME: 'SYSTEM',
     DEFAULT_ACCENT: 'UNICORN_DREAMS',
@@ -137,7 +137,7 @@ export const validateApiKey = (apiKey, provider = 'GEMINI') => {
       message: `Please replace the placeholder with your actual ${provider === 'GEMINI' ? 'Gemini' : 'OpenAI'} API key`,
     };
   }
-  
+
   // Provider-specific validation
   if (provider === 'GEMINI') {
     if (!apiKey.startsWith('AIza') || apiKey.length < 35) {
@@ -172,26 +172,54 @@ export const validateApiKey = (apiKey, provider = 'GEMINI') => {
 export const optimizePrompt = (userMessage) => {
   // Keep prompts concise to reduce token usage
   const basePrompt = "As a helpful personal assistant, provide a concise, practical response to: ";
-  
+
   // Trim and limit message length
   const trimmedMessage = userMessage.trim().substring(0, CONFIG.OPTIMIZATION.MAX_MESSAGE_LENGTH);
-  
+
   return basePrompt + trimmedMessage;
 };
 
 // Theme management functions
-export const getThemeColors = (themeName, accentColor) => {
+export const getThemeColors = (themeName, accentColor, customColor = null) => {
   const theme = CONFIG.UI.THEMES[themeName] || CONFIG.UI.THEMES[CONFIG.UI.DEFAULT_THEME];
-  const accent = CONFIG.UI.ACCENT_COLORS[accentColor] || CONFIG.UI.ACCENT_COLORS[CONFIG.UI.DEFAULT_ACCENT];
-  
+  let accent;
+
+  // Use custom color if accentColor is 'CUSTOM' and customColor is provided
+  if (accentColor === 'CUSTOM' && customColor) {
+    accent = customColor;
+  } else if (accentColor === 'MONOCHROME') {
+    // MONOCHROME adapts to theme: white in dark mode, black in light mode
+    accent = themeName === 'DARK' ? '#ffffff' : '#000000';
+  } else {
+    accent = CONFIG.UI.ACCENT_COLORS[accentColor] || CONFIG.UI.ACCENT_COLORS[CONFIG.UI.DEFAULT_ACCENT];
+  }
+
   // Create a copy of the theme and replace accent colors
   const colors = { ...theme };
   colors.BUBBLE_USER = accent;
   colors.ACCENT = accent;
-  
+
+  // Special handling for MONOCHROME text color to ensure proper contrast
+  if (accentColor === 'MONOCHROME') {
+    // Ensure proper contrast: dark text on light background, light text on dark background
+    if (themeName === 'DARK') {
+      // Dark mode: white background, black text
+      colors.BUBBLE_TEXT_USER = '#000000';
+    } else {
+      // Light mode: black background, white text  
+      colors.BUBBLE_TEXT_USER = '#ffffff';
+    }
+  } else {
+    colors.BUBBLE_TEXT_USER = '#ffffff';
+
+    // For all other accent colors, keep the original theme text colors
+    // This means white text in dark mode, and the original theme colors in light mode
+    // Don't override BUBBLE_TEXT_USER for non-MONOCHROME colors
+  }
+
   // Generate gradient colors based on accent
   colors.ACCENT_LIGHT = accent + '80'; // 50% opacity
-  
+
   return colors;
 };
 
@@ -229,9 +257,9 @@ export const getAccentColorOptions = (t) => {
     SKY_DREAMS: t ? t('COLOR_SKY_DREAMS') : 'Sky Dreams',
     LAVENDER_LOVE: t ? t('COLOR_LAVENDER_LOVE') : 'Lavender Love',
     MERMAID_TAIL: t ? t('COLOR_MERMAID_TAIL') : 'Mermaid Tail',
-    FLAMINGO_SASS: t ? t('COLOR_FLAMINGO_SASS') : 'Flamingo Sass',
+    MONOCHROME: t ? t('COLOR_MONOCHROME') : 'Monochrome',
   };
-  
+
   return Object.keys(CONFIG.UI.ACCENT_COLORS).map(key => ({
     name: key,
     color: CONFIG.UI.ACCENT_COLORS[key],

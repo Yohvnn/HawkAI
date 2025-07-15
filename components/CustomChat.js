@@ -91,15 +91,15 @@ const CustomChat = ({
                 padding: 14,
                 borderRadius: 12,
                 borderBottomRightRadius: 4,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.05,
-                shadowRadius: 2,
-                elevation: 1,
+                // shadowColor: '#000',
+                // shadowOffset: { width: 0, height: 1 },
+                // shadowOpacity: 0.05,
+                // shadowRadius: 2,
+                // elevation: 1,
               }}
             >
               <Text style={{ 
-                color: '#FFFFFF', 
+                color: theme.BUBBLE_TEXT_USER, 
                 fontSize: 16,
                 lineHeight: 22,
                 fontWeight: '400',
@@ -107,7 +107,7 @@ const CustomChat = ({
                 {message.text}
               </Text>
               <Text style={{ 
-                color: '#FFFFFF90', 
+                color: theme.BUBBLE_TEXT_USER + '90', 
                 fontSize: 12, 
                 marginTop: 6,
                 textAlign: 'right',
@@ -125,11 +125,11 @@ const CustomChat = ({
                 borderBottomLeftRadius: 4,
                 borderWidth: 1,
                 borderColor: theme.BORDER,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.05,
-                shadowRadius: 2,
-                elevation: 1,
+                // shadowColor: '#000',
+                // shadowOffset: { width: 0, height: 1 },
+                // shadowOpacity: 0.05,
+                // shadowRadius: 2,
+                // elevation: 1,
               }}
             >
               <Text style={{ 
@@ -187,11 +187,11 @@ const CustomChat = ({
               borderColor: theme.BORDER,
               flexDirection: 'row',
               alignItems: 'center',
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.05,
-              shadowRadius: 2,
-              elevation: 1,
+              // shadowColor: '#000',
+              // shadowOffset: { width: 0, height: 1 },
+              // shadowOpacity: 0.05,
+              // shadowRadius: 2,
+              // elevation: 1,
             }}>
               <ActivityIndicator 
                 size="small" 
@@ -234,8 +234,8 @@ const CustomChat = ({
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.05,
-          shadowRadius: 2,
-          elevation: 1,
+          shadowRadius: 1,
+          elevation: 0.5,
         }}>
           <TextInput
             style={{

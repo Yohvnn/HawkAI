@@ -87,7 +87,7 @@ const ApiKeyModal = ({
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 2,
-      elevation: 1,
+      elevation: 0.5,
     }]}>
       <Text style={[styles.instructionsTitle, { color: colors.TEXT_PRIMARY }]}>
         How to Get Your {CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI'} API Key
@@ -192,7 +192,7 @@ const ApiKeyModal = ({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
-        elevation: 1,
+        elevation: 0.5,
       }]}>
         <Ionicons name="information-circle-outline" size={20} color={colors.ACCENT} />
         <Text style={[styles.noteText, { color: colors.TEXT_MUTED }]}>
@@ -207,7 +207,7 @@ const ApiKeyModal = ({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
-        elevation: 1,
+        elevation: 0.5,
       }]}>
         <Ionicons name="warning-outline" size={20} color="#FF9500" />
         <Text style={[styles.noteText, { color: colors.TEXT_MUTED }]}>
@@ -228,12 +228,12 @@ const ApiKeyModal = ({
         {/* Header */}
         <View style={styles.header}>
           <View style={[styles.headerContent, {
-            borderBottomColor: colors.BORDER,
+            // borderBottomColor: colors.BORDER,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 1 },
             shadowOpacity: 0.05,
             shadowRadius: 2,
-            elevation: 1,
+            elevation: 0.5,
           }]}>
             <TouchableOpacity onPress={onClose} style={[styles.headerButton, {
               backgroundColor: colors.BACKGROUND,
@@ -281,7 +281,7 @@ const ApiKeyModal = ({
                   shadowOffset: { width: 0, height: 1 },
                   shadowOpacity: 0.05,
                   shadowRadius: 2,
-                  elevation: 1,
+                  elevation: 0.5,
                 }
               ]}
               placeholder={`${currentProvider === 'GEMINI' ? 'AIza...' : 'sk-...'} (paste your ${CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI'} API key here)`}
