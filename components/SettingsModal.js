@@ -17,13 +17,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { getAccentColorOptions } from '../config';
 import { getAvailableLanguages } from '../languages';
 
-const SettingsModal = ({ 
-  visible, 
-  onClose, 
-  currentTheme, 
-  currentAccent, 
+const SettingsModal = ({
+  visible,
+  onClose,
+  currentTheme,
+  currentAccent,
   currentLanguage,
-  onThemeChange, 
+  onThemeChange,
   onAccentChange,
   onLanguageChange,
   onApiKeyPress,
@@ -79,7 +79,7 @@ const SettingsModal = ({
     }
   };
 
-  const suggestedNames = [ 'Echo', 'Nova', 'Alter', 'Youyou', 'Kiarko', 'Tangodess', 'Bloody'];
+  const suggestedNames = ['Echo', 'Nova', 'Alter', 'Youyou', 'Kiarko', 'Tangodess', 'Bloody'];
 
   const handleSuggestedName = (name) => {
     setTempAssistantName(name);
@@ -90,7 +90,7 @@ const SettingsModal = ({
       key={themeKey}
       style={[
         styles.optionButton,
-        { 
+        {
           backgroundColor: colors.CARD,
           borderColor: currentTheme === themeKey ? colors.ACCENT : colors.BORDER,
           borderWidth: 1,
@@ -103,14 +103,14 @@ const SettingsModal = ({
       ]}
       onPress={() => onThemeChange(themeKey)}
     >
-      <Ionicons 
-        name={icon} 
-        size={22} 
-        color={currentTheme === themeKey ? colors.ACCENT : colors.TEXT_MUTED} 
+      <Ionicons
+        name={icon}
+        size={22}
+        color={currentTheme === themeKey ? colors.ACCENT : colors.TEXT_MUTED}
       />
       <Text style={[
         styles.optionText,
-        { 
+        {
           color: currentTheme === themeKey ? colors.ACCENT : colors.TEXT_PRIMARY,
           fontWeight: currentTheme === themeKey ? '600' : '400',
         }
@@ -128,7 +128,7 @@ const SettingsModal = ({
       key={language.code}
       style={[
         styles.optionButton,
-        { 
+        {
           backgroundColor: colors.CARD,
           borderColor: currentLanguage === language.code ? colors.ACCENT : colors.BORDER,
           borderWidth: 1,
@@ -141,14 +141,14 @@ const SettingsModal = ({
       ]}
       onPress={() => onLanguageChange(language.code)}
     >
-      <Ionicons 
-        name="language" 
-        size={22} 
-        color={currentLanguage === language.code ? colors.ACCENT : colors.TEXT_MUTED} 
+      <Ionicons
+        name="language"
+        size={22}
+        color={currentLanguage === language.code ? colors.ACCENT : colors.TEXT_MUTED}
       />
       <Text style={[
         styles.optionText,
-        { 
+        {
           color: currentLanguage === language.code ? colors.ACCENT : colors.TEXT_PRIMARY,
           fontWeight: currentLanguage === language.code ? '600' : '400',
         }
@@ -166,7 +166,7 @@ const SettingsModal = ({
       key={option.name}
       style={[
         styles.colorButton,
-        { 
+        {
           backgroundColor: colors.CARD,
           borderColor: currentAccent === option.name ? option.color : colors.BORDER,
           borderWidth: 1,
@@ -182,7 +182,7 @@ const SettingsModal = ({
       <View style={[styles.colorPreview, { backgroundColor: option.color }]} />
       <Text style={[
         styles.colorText,
-        { 
+        {
           color: currentAccent === option.name ? option.color : colors.TEXT_PRIMARY,
           fontWeight: currentAccent === option.name ? '600' : '400',
         }
@@ -204,8 +204,8 @@ const SettingsModal = ({
     >
       <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
         {/* Header */}
-        <View style={[styles.header, { 
-          backgroundColor: colors.BACKGROUND, 
+        <View style={[styles.header, {
+          backgroundColor: colors.BACKGROUND,
           borderBottomColor: colors.BORDER,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 1 },
@@ -213,7 +213,7 @@ const SettingsModal = ({
           shadowRadius: 2,
           elevation: 1,
         }]}>
-          <Text style={[styles.headerTitle, { 
+          <Text style={[styles.headerTitle, {
             color: colors.TEXT_PRIMARY,
             fontWeight: '600',
             fontSize: 18,
@@ -239,7 +239,7 @@ const SettingsModal = ({
             <TouchableOpacity
               style={[
                 styles.apiKeyButton,
-                { 
+                {
                   backgroundColor: colors.CARD,
                   borderColor: userApiKey ? colors.ACCENT : '#FF9500',
                   borderWidth: 1,
@@ -252,10 +252,10 @@ const SettingsModal = ({
               ]}
               onPress={onApiKeyPress}
             >
-              <Ionicons 
-                name={userApiKey ? "key" : "key-outline"} 
-                size={24} 
-                color={userApiKey ? colors.ACCENT : '#FF9500'} 
+              <Ionicons
+                name={userApiKey ? "key" : "key-outline"}
+                size={24}
+                color={userApiKey ? colors.ACCENT : '#FF9500'}
               />
               <View style={styles.apiKeyInfo}>
                 <Text style={[
@@ -268,16 +268,16 @@ const SettingsModal = ({
                   styles.apiKeyStatus,
                   { color: userApiKey ? colors.ACCENT : '#FF9500' }
                 ]}>
-                  {userApiKey ? 
-                    `${t('API_KEY_CONFIGURED')} (${userApiKey.length} chars)` : 
+                  {userApiKey ?
+                    `${t('API_KEY_CONFIGURED')} (${userApiKey.length} chars)` :
                     t('API_KEY_REQUIRED')
                   }
                 </Text>
               </View>
-              <Ionicons 
-                name="chevron-forward" 
-                size={20} 
-                color={colors.TEXT_SECONDARY} 
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={colors.TEXT_SECONDARY}
               />
             </TouchableOpacity>
           </View>
@@ -294,7 +294,7 @@ const SettingsModal = ({
               <TextInput
                 style={[
                   styles.nameInput,
-                  { 
+                  {
                     backgroundColor: colors.CARD,
                     borderColor: colors.BORDER,
                     color: colors.TEXT_PRIMARY,
@@ -314,16 +314,22 @@ const SettingsModal = ({
                 autoCorrect={false}
               />
               <TouchableOpacity
-                style={[styles.saveButton, { backgroundColor: colors.ACCENT }]}
+                style={[styles.saveButton, {
+                  backgroundColor: colors.ACCENT + '20',
+                  borderRadius: 8,
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                }]}
                 onPress={handleAssistantNameSave}
               >
-                <Text style={styles.saveButtonText}>{t('SAVE')}</Text>
+
+                <Ionicons name="save" size={20} color={colors.ACCENT} />
               </TouchableOpacity>
             </View>
             <Text style={[styles.characterCount, { color: colors.TEXT_SECONDARY }]}>
               {tempAssistantName.length}/20 {t('ASSISTANT_NAME_CHARACTERS')}
             </Text>
-            
+
             {/* Suggested Names */}
             <Text style={[styles.suggestedTitle, { color: colors.TEXT_PRIMARY }]}>
               {t('ASSISTANT_NAME_SUGGESTIONS')}
@@ -334,7 +340,7 @@ const SettingsModal = ({
                   key={name}
                   style={[
                     styles.suggestedNameButton,
-                    { 
+                    {
                       backgroundColor: colors.CARD,
                       borderColor: colors.BORDER,
                       shadowColor: '#000',
@@ -400,8 +406,8 @@ const SettingsModal = ({
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
               {t('PREVIEW_SECTION')}
             </Text>
-            <View style={[styles.previewContainer, { 
-              backgroundColor: colors.BACKGROUND, 
+            <View style={[styles.previewContainer, {
+              backgroundColor: colors.BACKGROUND,
               borderColor: colors.BORDER,
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
@@ -409,7 +415,7 @@ const SettingsModal = ({
               shadowRadius: 2,
               elevation: 1,
             }]}>
-              <View style={[styles.previewBubble, { 
+              <View style={[styles.previewBubble, {
                 backgroundColor: colors.ACCENT,
                 borderRadius: 12,
                 borderBottomRightRadius: 4,
@@ -423,7 +429,7 @@ const SettingsModal = ({
                 shadowRadius: 2,
                 elevation: 1,
               }]}>
-                <Text style={[styles.previewText, { 
+                <Text style={[styles.previewText, {
                   color: '#FFFFFF',
                   fontSize: 16,
                   lineHeight: 22,
@@ -432,7 +438,7 @@ const SettingsModal = ({
                   {t('PREVIEW_USER_MESSAGE')}
                 </Text>
               </View>
-              <View style={[styles.previewBubble, { 
+              <View style={[styles.previewBubble, {
                 backgroundColor: colors.CARD,
                 borderRadius: 12,
                 borderBottomLeftRadius: 4,
@@ -447,7 +453,7 @@ const SettingsModal = ({
                 shadowRadius: 2,
                 elevation: 1,
               }]}>
-                <Text style={[styles.previewText, { 
+                <Text style={[styles.previewText, {
                   color: colors.TEXT_PRIMARY,
                   fontSize: 16,
                   lineHeight: 22,
@@ -464,8 +470,8 @@ const SettingsModal = ({
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
               {t('CREDITS_SECTION')}
             </Text>
-            <View style={[styles.creditsContainer, { 
-              backgroundColor: colors.CARD, 
+            <View style={[styles.creditsContainer, {
+              backgroundColor: colors.CARD,
               borderColor: colors.BORDER,
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
@@ -483,9 +489,9 @@ const SettingsModal = ({
                 </Text>
               </TouchableOpacity>
               <Text style={[styles.creditsText, { color: colors.TEXT_SECONDARY }]}>
-                {'\n'}{t('CREDITS_POWERED_BY')}
+                {''}{t('CREDITS_POWERED_BY')}
                 {'\n'}{t('CREDITS_BUILT_WITH')}
-                {'\n'}{t('CREDITS_COMPANY')}
+                {'\n\n'}{t('CREDITS_COMPANY')}
               </Text>
             </View>
           </View>
@@ -613,9 +619,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   saveButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 8,
+    width: 46,
+    height: 46,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   saveButtonText: {
     color: '#FFFFFF',

@@ -42,12 +42,12 @@ What would you like to know?`,
 
     WELCOME_NO_API: `Welcome to HawkAI! 🔑
 
-To get started, you'll need to set up your own Gemini API key for the best experience.
+You have 5 free messages to try out the app with demo responses.
 
-Tap the key icon in the header to:
-• Get your free Gemini API key
-• Set up your personal AI assistant
-• Start chatting with unlimited access
+For unlimited AI-powered conversations:
+• Tap the settings icon to add your Gemini API key
+• Get your free API key from Google AI Studio
+• Start chatting with real AI responses
 
 Your conversations will be private and secure!`,
 
@@ -89,7 +89,7 @@ Your conversations will be private and secure!`,
     CREDITS_DEVELOPED_BY: 'Developed by',
     CREDITS_POWERED_BY: 'Powered by Google Gemini AI',
     CREDITS_BUILT_WITH: 'Built with React Native & Expo',
-    CREDITS_COMPANY: 'BloodyHawk Studio',
+    CREDITS_COMPANY: 'BLWK Studio',
     
     // API Key Modal
     API_KEY_MODAL_TITLE: 'API Key Settings',
@@ -158,12 +158,12 @@ Que souhaitez-vous savoir ?`,
 
     WELCOME_NO_API: `Bienvenue sur HawkAI ! 🔑
 
-Pour commencer, vous devrez configurer votre propre clé API Gemini pour la meilleure expérience.
+Vous avez 5 messages gratuits pour essayer l'application avec des réponses de démonstration.
 
-Appuyez sur l'icône clé dans l'en-tête pour :
-• Obtenir votre clé API Gemini gratuite
-• Configurer votre assistant IA personnel
-• Commencer à discuter avec un accès illimité
+Pour des conversations illimitées alimentées par l'IA :
+• Appuyez sur l'icône des paramètres pour ajouter votre clé API Gemini
+• Obtenez votre clé API gratuite depuis Google AI Studio
+• Commencez à discuter avec de vraies réponses IA
 
 Vos conversations seront privées et sécurisées !`,
 
@@ -205,7 +205,7 @@ Vos conversations seront privées et sécurisées !`,
     CREDITS_DEVELOPED_BY: 'Développé par',
     CREDITS_POWERED_BY: 'Alimenté par Google Gemini AI',
     CREDITS_BUILT_WITH: 'Construit avec React Native & Expo',
-    CREDITS_COMPANY: 'BloodyHawk Studio',
+    CREDITS_COMPANY: 'BLWK Studio',
     
     // API Key Modal
     API_KEY_MODAL_TITLE: 'Paramètres de la clé API',

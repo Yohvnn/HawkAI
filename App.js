@@ -30,6 +30,7 @@ export default function App() {
   const [currentLanguage, setCurrentLanguage] = useState(CONFIG.UI.DEFAULT_LANGUAGE);
   const [userApiKey, setUserApiKey] = useState('');
   const [assistantName, setAssistantName] = useState('Assistant');
+  const [messageCount, setMessageCount] = useState(0); // Track user messages sent
   
   // Get system color scheme
   const systemColorScheme = useColorScheme();
@@ -79,12 +80,14 @@ export default function App() {
       const savedLanguage = await AsyncStorage.getItem('userLanguage');
       const savedApiKey = await AsyncStorage.getItem('userApiKey');
       const savedAssistantName = await AsyncStorage.getItem('assistantName');
+      const savedMessageCount = await AsyncStorage.getItem('messageCount');
       
       if (savedTheme) setCurrentTheme(savedTheme);
       if (savedAccent) setCurrentAccent(savedAccent);
       if (savedLanguage) setCurrentLanguage(savedLanguage);
       if (savedApiKey) setUserApiKey(savedApiKey);
       if (savedAssistantName) setAssistantName(savedAssistantName);
+      if (savedMessageCount) setMessageCount(parseInt(savedMessageCount));
     } catch (error) {
       console.log('No saved preferences found');
     }
@@ -148,28 +151,82 @@ export default function App() {
     try {
       await AsyncStorage.setItem('userApiKey', newApiKey);
       setUserApiKey(newApiKey);
-      Alert.alert('Success!', 'Your API key has been saved successfully. You can now start chatting!');
+      // Reset message count when API key is added
+      setMessageCount(0);
+      await AsyncStorage.setItem('messageCount', '0');
+      
+      // Immediately initialize AI with the new API key
+      const apiValidation = validateApiKey(newApiKey);
+      if (apiValidation.isValid) {
+        try {
+          const ai = new GoogleGenerativeAI(newApiKey);
+          setGenAI(ai);
+          Alert.alert('Success!', 'Your API key has been saved successfully. You can now start chatting with AI!');
+        } catch (error) {
+          console.error('Failed to initialize Gemini AI with new key:', error);
+          Alert.alert('API Key Error', 'Your API key was saved but failed to initialize AI. Please check if the key is valid.');
+        }
+      } else {
+        Alert.alert('Invalid API Key', apiValidation.message);
+      }
     } catch (error) {
       console.error('Failed to save API key:', error);
       Alert.alert('Error', 'Failed to save API key. Please try again.');
     }
   };
 
+  const saveMessageCount = async (count) => {
+    try {
+      await AsyncStorage.setItem('messageCount', count.toString());
+    } catch (error) {
+      console.error('Failed to save message count:', error);
+    }
+  };
+
   const onSend = useCallback(async (newMessages = []) => {
-    // Check if AI is initialized
-    if (!genAI) {
+    // Check message limit if no API key is set
+    if (!genAI && messageCount >= 5) {
       Alert.alert(
-        'No API Key', 
-        'Please set up your Gemini API key first to start chatting!',
+        'Message Limit Reached', 
+        'You\'ve sent 5 messages! To continue chatting, please add your Gemini API key.',
         [
           { text: 'Cancel', style: 'cancel' },
-          { text: 'Setup API Key', onPress: () => setShowApiKeyModal(true) }
+          { text: 'Add API Key', onPress: () => setShowApiKeyModal(true) }
         ]
       );
       return;
     }
 
-    // Add user message immediately
+    // Check if AI is initialized
+    if (!genAI) {
+      // Allow message but increment counter
+      const newCount = messageCount + 1;
+      setMessageCount(newCount);
+      saveMessageCount(newCount);
+
+      // Add user message
+      setMessages(previousMessages => [...previousMessages, ...newMessages]);
+
+      // Show demo response for users without API key
+      setIsTyping(true);
+      setTimeout(() => {
+        const demoResponse = {
+          _id: Math.round(Math.random() * 1000000),
+          text: `This is a demo response (${newCount}/5 free messages). To get real AI responses from Gemini, please add your API key in settings!`,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: assistantName,
+            avatar: '🤖',
+          },
+        };
+        setMessages(previousMessages => [...previousMessages, demoResponse]);
+        setIsTyping(false);
+      }, 1000);
+      return;
+    }
+
+    // Normal flow for users with API key
     setMessages(previousMessages => [...previousMessages, ...newMessages]);
     setIsTyping(true);
 
@@ -213,7 +270,7 @@ export default function App() {
     } finally {
       setIsTyping(false);
     }
-  }, [genAI]);
+  }, [genAI, messageCount, assistantName]);
 
   const getGeminiResponse = async (message) => {
     if (!genAI) {
@@ -249,7 +306,10 @@ export default function App() {
           <View style={styles.headerText}>
             <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{CONFIG.APP.NAME}</Text>
             <Text style={[styles.headerSubtitle, { color: colors.TEXT_MUTED }]}>
-              {!genAI ? 'Setup API Key Required' : isTyping ? `${assistantName} is typing...` : `Online • ${assistantName}`}
+              {!genAI ? 
+                (messageCount >= 5 ? 'Add API Key to Continue' : `${5 - messageCount} free messages left`) : 
+                isTyping ? `${assistantName} is typing...` : `Online • ${assistantName}`
+              }
             </Text>
           </View>
           <TouchableOpacity 
