@@ -13,7 +13,7 @@ import CustomChat from './components/CustomChat';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { CONFIG, getThemeColors, validateApiKey } from './config';
+import { CONFIG, getThemeColors } from './config';
 import { aiService } from './services/aiService';
 import { getTranslation, DEFAULT_LANGUAGE } from './languages';
 import SettingsModal from './components/SettingsModal';
@@ -27,7 +27,7 @@ export default function App() {
   const [currentTheme, setCurrentTheme] = useState(CONFIG.UI.DEFAULT_THEME);
   const [currentAccent, setCurrentAccent] = useState(CONFIG.UI.DEFAULT_ACCENT);
   const [currentLanguage, setCurrentLanguage] = useState(CONFIG.UI.DEFAULT_LANGUAGE);
-  const [currentProvider, setCurrentProvider] = useState(CONFIG.DEFAULT_AI_PROVIDER || 'GEMINI');
+  const [currentProvider, setCurrentProvider] = useState(CONFIG.DEFAULT_AI_PROVIDER);
   const [userApiKey, setUserApiKey] = useState('');
   const [assistantName, setAssistantName] = useState('Assistant');
   const [messageCount, setMessageCount] = useState(0); // Track user messages sent
@@ -52,8 +52,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    initializeAI();
+    
     // Set dynamic welcome message based on API key status
-    const welcomeText = aiService.isReady() 
+    const welcomeText = userApiKey || CONFIG.GEMINI.API_KEY !== 'YOUR_GEMINI_API_KEY_HERE' 
       ? t('WELCOME_MESSAGE')
       : t('WELCOME_NO_API');
 
@@ -152,6 +154,25 @@ export default function App() {
     }
   };
 
+  const initializeAI = () => {
+    // Use user's API key if available, otherwise fall back to default
+    const apiKeyToUse = userApiKey || CONFIG.GEMINI.API_KEY;
+    const apiValidation = validateApiKey(apiKeyToUse);
+    
+    if (apiValidation.isValid) {
+      try {
+        const ai = new GoogleGenerativeAI(apiKeyToUse);
+        setGenAI(ai);
+      } catch (error) {
+        console.error('Failed to initialize Gemini AI:', error);
+        Alert.alert('AI Initialization Error', 'Failed to connect to Gemini AI. Please check your API key.');
+      }
+    } else {
+      console.warn(apiValidation.message);
+      setGenAI(null);
+    }
+  };
+
   const handleSaveApiKey = async (newApiKey) => {
     try {
       await AsyncStorage.setItem('userApiKey', newApiKey);
@@ -185,10 +206,9 @@ export default function App() {
   const onSend = useCallback(async (newMessages = []) => {
     // Check message limit if no API key is set
     if (!aiService.isReady() && messageCount >= 5) {
-      const providerName = CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI';
       Alert.alert(
         'Message Limit Reached', 
-        `You've sent 5 messages! To continue chatting, please add your ${providerName} API key.`,
+        `You\'ve sent 5 messages! To continue chatting, please add your ${CONFIG.AI_PROVIDERS[currentProvider].name} API key.`,
         [
           { text: 'Cancel', style: 'cancel' },
           { text: 'Add API Key', onPress: () => setShowApiKeyModal(true) }
@@ -210,10 +230,9 @@ export default function App() {
       // Show demo response for users without API key
       setIsTyping(true);
       setTimeout(() => {
-        const providerName = CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI';
         const demoResponse = {
           _id: Math.round(Math.random() * 1000000),
-          text: `This is a demo response (${newCount}/5 free messages). To get real AI responses from ${providerName}, please add your API key in settings!`,
+          text: `This is a demo response (${newCount}/5 free messages). To get real AI responses from ${CONFIG.AI_PROVIDERS[currentProvider].name}, please add your API key in settings!`,
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -251,14 +270,9 @@ export default function App() {
     } catch (error) {
       console.error('Error getting AI response:', error);
       
-      const providerName = CONFIG.AI_PROVIDERS[currentProvider]?.name || 'AI';
-      let errorMessage = t('ERROR_GENERIC');
-      
-      // Check for quota exceeded errors
-      if (error.message.includes('quota') || error.message.includes('429') || error.message.includes('exceeded')) {
-        errorMessage = t('ERROR_QUOTA_EXCEEDED');
-      } else if (error.message.includes('API key')) {
-        errorMessage = t('ERROR_API_KEY');
+      let errorMessage = 'Sorry, I encountered an error. Please try again.';
+      if (error.message.includes('API key')) {
+        errorMessage = `Please check your ${CONFIG.AI_PROVIDERS[currentProvider].name} API key configuration.`;
       }
       
       const errorResponse = {
@@ -276,7 +290,7 @@ export default function App() {
     } finally {
       setIsTyping(false);
     }
-  }, [aiService, messageCount, assistantName, currentProvider, t]);
+  }, [aiService, messageCount, assistantName, currentProvider]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>

@@ -16,7 +16,7 @@ export const CONFIG = {
       name: 'OpenAI GPT',
       // Get your API key from: https://platform.openai.com/api-keys
       API_KEY: process.env.EXPO_PUBLIC_OPENAI_API_KEY || 'YOUR_OPENAI_API_KEY_HERE',
-      MODEL_NAME: 'gpt-4o-mini', // Most cost-effective model
+      MODEL_NAME: 'gpt-3.5-turbo', // Most cost-effective model
       MAX_TOKENS: 150,
       TEMPERATURE: 0.7,
     },
