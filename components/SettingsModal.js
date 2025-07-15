@@ -414,7 +414,8 @@ const SettingsModal = ({
             </View>
           </View>
 
-          {/* AI Provider Selection */}
+          {/* AI Provider Selection - Temporarily hidden */}
+          {/* 
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
               AI Provider
@@ -426,6 +427,7 @@ const SettingsModal = ({
               {providerOptions.map(renderProviderOption)}
             </View>
           </View>
+          */}
 
           {/* Theme Selection */}
           <View style={styles.section}>

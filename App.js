@@ -52,8 +52,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    initializeAI();
-    
     // Set dynamic welcome message based on API key status
     const welcomeText = userApiKey || CONFIG.GEMINI.API_KEY !== 'YOUR_GEMINI_API_KEY_HERE' 
       ? t('WELCOME_MESSAGE')
@@ -154,25 +152,6 @@ export default function App() {
     }
   };
 
-  const initializeAI = () => {
-    // Use user's API key if available, otherwise fall back to default
-    const apiKeyToUse = userApiKey || CONFIG.GEMINI.API_KEY;
-    const apiValidation = validateApiKey(apiKeyToUse);
-    
-    if (apiValidation.isValid) {
-      try {
-        const ai = new GoogleGenerativeAI(apiKeyToUse);
-        setGenAI(ai);
-      } catch (error) {
-        console.error('Failed to initialize Gemini AI:', error);
-        Alert.alert('AI Initialization Error', 'Failed to connect to Gemini AI. Please check your API key.');
-      }
-    } else {
-      console.warn(apiValidation.message);
-      setGenAI(null);
-    }
-  };
-
   const handleSaveApiKey = async (newApiKey) => {
     try {
       await AsyncStorage.setItem('userApiKey', newApiKey);
@@ -270,9 +249,15 @@ export default function App() {
     } catch (error) {
       console.error('Error getting AI response:', error);
       
-      let errorMessage = 'Sorry, I encountered an error. Please try again.';
+      let errorMessage = t('ERROR_GENERAL');
+      
+      // Check for specific error types
       if (error.message.includes('API key')) {
-        errorMessage = `Please check your ${CONFIG.AI_PROVIDERS[currentProvider].name} API key configuration.`;
+        errorMessage = t('ERROR_API_KEY');
+      } else if (error.message.includes('429') || error.message.includes('quota') || error.message.includes('exceeded your current quota')) {
+        errorMessage = t('ERROR_QUOTA_EXCEEDED');
+      } else if (error.message.includes('overloaded') || error.message.includes('503')) {
+        errorMessage = t('ERROR_OVERLOADED');
       }
       
       const errorResponse = {

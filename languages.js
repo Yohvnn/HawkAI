@@ -26,13 +26,13 @@ export const TRANSLATIONS = {
     // Main Chat Interface
     CHAT_PLACEHOLDER: 'Type your message...',
     SEND: 'Send',
-    ASSISTANT_TYPING: 'Assistant is typing...',
+    ASSISTANT_TYPING: 'I am thinking...',
     
     // Welcome Message
     WELCOME_MESSAGE: `Hello! I'm your personal assistant powered by Gemini AI. 💫
 
 I'm designed to be lightweight, fast, and straightforward - your go-to for quick questions when in doubt:
-• Instant answers to quick questions
+• Instant answers to quick questions during non overwhelming moments
 • Minimal storage footprint
 • Straightforward information lookup
 • Simple task assistance
@@ -115,6 +115,12 @@ Your conversations will be private and secure!`,
     API_KEY_VALIDATION_EMPTY: 'Please enter a valid API key',
     API_KEY_VALIDATION_INVALID: 'This doesn\'t look like a valid Gemini API key. Gemini API keys typically start with "AIza" and are longer than 35 characters.',
     
+    // Error Messages
+    ERROR_GENERAL: 'Sorry, I encountered an error. Please try again.',
+    ERROR_OVERLOADED: 'Sorry my brain is overloaded, I cannot give you an answer right now. Try again later.',
+    ERROR_QUOTA_EXCEEDED: 'You reached your quotas and your dose of AI, may I tell you that you should lower your usage of AI. For now use the old way and go find a good book for your question.',
+    ERROR_API_KEY: 'Please check your API key configuration.',
+    
     // Color Names
     COLOR_UNICORN_DREAMS: 'Unicorn Dreams',
     COLOR_BUBBLEGUM_POP: 'Bubblegum Pop',
@@ -142,13 +148,13 @@ Your conversations will be private and secure!`,
     // Main Chat Interface
     CHAT_PLACEHOLDER: 'Tapez votre message...',
     SEND: 'Envoyer',
-    ASSISTANT_TYPING: 'L\'assistant tape...',
+    ASSISTANT_TYPING: 'Je réfléchis...',
     
     // Welcome Message
     WELCOME_MESSAGE: `Bonjour ! Je suis votre assistant personnel alimenté par Gemini AI. 💫
 
 Je suis conçu pour être léger, rapide et simple - votre référence pour les questions rapides en cas de doute :
-• Réponses instantanées aux questions rapides
+• Réponses instantanées aux questions rapides lors des moments non surchargés
 • Empreinte de stockage minimale
 • Recherche d'informations directe
 • Assistance pour les tâches simples
@@ -230,6 +236,12 @@ Vos conversations seront privées et sécurisées !`,
     API_KEY_BENEFIT_LIMITS: 'Aucune limite : Utilisez l\'application autant que vous le souhaitez',
     API_KEY_VALIDATION_EMPTY: 'Veuillez entrer une clé API valide',
     API_KEY_VALIDATION_INVALID: 'Cela ne ressemble pas à une clé API Gemini valide. Les clés API Gemini commencent généralement par "AIza" et font plus de 35 caractères.',
+    
+    // Error Messages
+    ERROR_GENERAL: 'Désolé, j\'ai rencontré un soucis. Veuillez réessayer.',
+    ERROR_OVERLOADED: 'Désolé, mon cerveau est surchargé, je ne peux pas vous donner de réponse maintenant. Réessayez plus tard.',
+    ERROR_QUOTA_EXCEEDED: 'Vous avez atteint vos quotas et votre dose d\'IA, puis-je vous dire que vous devriez réduire votre utilisation de l\'IA. Pour l\'instant, utilisez l\'ancienne méthode et allez chercher un bon livre pour votre question.',
+    ERROR_API_KEY: 'Veuillez vérifier la configuration de votre clé API.',
     
     // Color Names
     COLOR_UNICORN_DREAMS: 'Rêves de licorne',

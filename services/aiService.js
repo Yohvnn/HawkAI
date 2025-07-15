@@ -13,6 +13,11 @@ class AIService {
   // Initialize AI service with provider and API key
   async initialize(provider, apiKey) {
     try {
+      // Temporarily block OpenAI due to quota issues
+      if (provider === 'OPENAI') {
+        throw new Error('OpenAI is temporarily unavailable. Please use Gemini for now.');
+      }
+
       // Validate the API key for the specific provider
       const validation = validateApiKey(apiKey, provider);
       if (!validation.isValid) {
@@ -56,10 +61,13 @@ class AIService {
   }
 
   // Generate response based on current provider
-  async generateResponse(message) {
+  async generateResponse(message, retryCount = 0) {
     if (!this.isReady()) {
       throw new Error('AI service not initialized. Please set up your API key first.');
     }
+
+    const maxRetries = 2; // Reduced from 3 to 2
+    const baseDelay = 1000; // 1 second
 
     try {
       if (this.currentProvider === 'GEMINI') {
@@ -71,6 +79,18 @@ class AIService {
       }
     } catch (error) {
       console.error(`Error generating response from ${this.currentProvider}:`, error);
+      
+      // Check if it's a 503 overloaded error and we haven't exceeded max retries
+      const is503Error = error.message.includes('503') || error.message.includes('overloaded');
+      
+      if (is503Error && retryCount < maxRetries) {
+        const delay = baseDelay * Math.pow(2, retryCount); // Exponential backoff
+        console.log(`Retrying in ${delay}ms... (attempt ${retryCount + 1}/${maxRetries})`);
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return this.generateResponse(message, retryCount + 1);
+      }
+      
       throw error;
     }
   }

@@ -37,7 +37,7 @@ export const CONFIG = {
     WELCOME_MESSAGE: `Hello! I'm your personal assistant powered by Gemini AI. 💫
 
 I'm designed to be lightweight, fast, and straightforward - your go-to for quick questions when in doubt:
-• Instant answers to quick questions
+• Instant answers to quick questions during non overwhelming moments
 • Minimal storage footprint
 • Straightforward information lookup
 • Simple task assistance
@@ -206,14 +206,15 @@ export const getAIProviderOptions = (t) => {
       description: t ? t('AI_PROVIDER_GEMINI_DESC') : 'Fast and cost-effective AI responses',
       setupUrl: 'https://makersuite.google.com/app/apikey',
     },
-    {
-      key: 'OPENAI',
-      name: CONFIG.AI_PROVIDERS.OPENAI.name,
-      displayName: t ? t('AI_PROVIDER_OPENAI') : 'OpenAI GPT',
-      icon: 'chatbubbles',
-      description: t ? t('AI_PROVIDER_OPENAI_DESC') : 'Advanced conversational AI',
-      setupUrl: 'https://platform.openai.com/api-keys',
-    },
+    // Temporarily disabled due to quota issues
+    // {
+    //   key: 'OPENAI',
+    //   name: CONFIG.AI_PROVIDERS.OPENAI.name,
+    //   displayName: t ? t('AI_PROVIDER_OPENAI') : 'OpenAI GPT',
+    //   icon: 'chatbubbles',
+    //   description: t ? t('AI_PROVIDER_OPENAI_DESC') : 'Advanced conversational AI',
+    //   setupUrl: 'https://platform.openai.com/api-keys',
+    // },
   ];
 };
 
